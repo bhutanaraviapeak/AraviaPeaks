@@ -1,8 +1,8 @@
 "use client"
 
 import Image from "next/image"
-import { useMemo, useState } from "react"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { useMemo } from "react"
+import { Utensils, BedDouble, MapPin, Plus } from "lucide-react"
 import type { PackageItineraryItem } from "@/lib/data/packages"
 import { cn } from "@/lib/utils"
 
@@ -17,7 +17,6 @@ type PackageItineraryAccordionProps = {
 type TimelineItem = PackageItineraryItem & {
   dayNumber: number
   image?: string
-  tags?: string[]
 }
 
 const FALLBACK_DAY_THEMES = [
@@ -28,18 +27,74 @@ const FALLBACK_DAY_THEMES = [
   "Leisure and departure",
 ]
 
-const TAG_KEYWORDS: Array<{ label: string; match: RegExp }> = [
-  { label: "Hike", match: /hike|trek|trail|summit/i },
-  { label: "Monastery", match: /monastery|dzong|temple|cloister/i },
-  { label: "Scenic Drive", match: /drive|pass|valley|landscape/i },
-  { label: "Culture", match: /festival|culture|heritage|tradition/i },
-  { label: "Local Food", match: /food|cuisine|market|farm|culinary/i },
-  { label: "Nature", match: /nature|forest|lake|river|wildlife/i },
+const P = "/images/packages/"
+const I = "/images/itinerary/"
+
+// Ordered keyword → image rules. First match wins; arrays rotate by day index for variety.
+const IMAGE_RULES: { re: RegExp; img: string | string[] }[] = [
+  { re: /tiger|taktsang|nest/, img: `${P}cultural-heritage.jpg` },
+  { re: /arriv|welcome|reception|pick.?up/, img: `${I}paro-arrival.jpg` },
+  { re: /depart|farewell|leisure|checkout|check-out|conclude|final|fly out|home/, img: `${P}custom-journey.jpg` },
+  { re: /festival|tshechu|drubchen|cham|mask/, img: `${P}paro-tshechu.jpg` },
+  { re: /punakha/, img: `${P}punakha-drubchen.jpg` },
+  { re: /dochula|dochu la/, img: `${P}western-highlights.jpg` },
+  { re: /thimphu/, img: `${I}market.jpg` },
+  { re: /market|handicraft|craft|shop|weav|artisan|bazaar/, img: `${I}market.jpg` },
+  { re: /wellness|spa|hot.?stone|rejuven/, img: `${P}luxury-wellness.jpg` },
+  { re: /meditat|spiritual|prayer|blessing|retreat|mindful/, img: `${P}spiritual-journey.jpg` },
+  { re: /monk|study|lhakhang|temple|shrine|chapel/, img: `${I}monks.jpg` },
+  { re: /crane|bird|wildlife|phobjikha/, img: `${P}birdwatching.jpg` },
+  { re: /lake|glacial/, img: `${P}dagala-thousand-lakes.jpg` },
+  { re: /bridge/, img: `${P}photography-tour.jpg` },
+  { re: /trashigang|eastern|mongar/, img: `${P}eastern-bhutan.jpg` },
+  { re: /bumthang|jakar/, img: `${P}snowman-trek.jpg` },
+  { re: /trek|hike|summit|camp|trail|acclimat|expedition|briefing|ascent|pass/, img: [`${P}jomolhari-trek.jpg`, `${P}snowman-trek.jpg`, `${P}druk-path-trek.jpg`] },
+  { re: /dzong|fortress|heritage|museum|monument|cultur/, img: `${P}jambay-lhakhang.jpg` },
+  { re: /valley|nature|landscape|countryside|scenic|drive|village|farm|rural|hot.?spring/, img: [`${P}luxury-wellness.jpg`, `${P}luxury-bhutan.jpg`, `${P}custom-journey.jpg`] },
+  { re: /paro/, img: `${I}paro-arrival.jpg` },
 ]
 
-const buildTags = (input: string) => {
-  const matches = TAG_KEYWORDS.filter((tag) => tag.match.test(input)).map((tag) => tag.label)
-  return Array.from(new Set(matches)).slice(0, 4)
+// Diverse fallback rotation pool.
+const POOL = [
+  `${I}paro-arrival.jpg`,
+  `${P}paro-tshechu.jpg`,
+  `${P}jambay-lhakhang.jpg`,
+  `${I}market.jpg`,
+  `${P}punakha-drubchen.jpg`,
+  `${P}spiritual-journey.jpg`,
+  `${P}western-highlights.jpg`,
+  `${P}jomolhari-trek.jpg`,
+  `${P}dagala-thousand-lakes.jpg`,
+  `${P}luxury-wellness.jpg`,
+  `${I}monks.jpg`,
+  `${P}custom-journey.jpg`,
+]
+
+function resolveImage(text: string, index: number): string {
+  for (const rule of IMAGE_RULES) {
+    if (rule.re.test(text)) {
+      return Array.isArray(rule.img) ? rule.img[index % rule.img.length] : rule.img
+    }
+  }
+  return POOL[index % POOL.length]
+}
+
+// Assign a relevant image to each day, guaranteeing no two consecutive days repeat.
+function assignImages(items: TimelineItem[]): string[] {
+  const out: string[] = []
+  for (let i = 0; i < items.length; i++) {
+    const text = `${items[i].title || ""} ${items[i].description || ""}`.toLowerCase()
+    let img = items[i].image || resolveImage(text, i)
+    if (i > 0 && img === out[i - 1]) {
+      // pick the next pool image that differs from the previous day
+      const alt = POOL.find((p, k) => p !== out[i - 1] && (k + i) % POOL.length !== 0) || POOL[(i + 1) % POOL.length]
+      // prefer a stable rotation offset so it still feels intentional
+      img = POOL[(i * 5 + 3) % POOL.length]
+      if (img === out[i - 1]) img = alt
+    }
+    out.push(img)
+  }
+  return out
 }
 
 const safeArray = <T,>(value?: T[]) => (Array.isArray(value) ? value.filter(Boolean) : [])
@@ -49,7 +104,6 @@ export function PackageItineraryAccordion({
   durationDays,
   highlights,
   packageTitle,
-  heroImage,
 }: PackageItineraryAccordionProps) {
   const safeItinerary = useMemo(() => (Array.isArray(itinerary) ? itinerary : []), [itinerary])
   const safeHighlights = useMemo(() => (Array.isArray(highlights) ? highlights.filter(Boolean) : []), [highlights])
@@ -57,7 +111,6 @@ export function PackageItineraryAccordion({
   const fallbackDays = useMemo(() => {
     if (durationDays && durationDays > 0) return durationDays
     if (safeHighlights.length >= 5) return 5
-    if (safeHighlights.length >= 3) return 3
     return 3
   }, [durationDays, safeHighlights.length])
 
@@ -67,19 +120,17 @@ export function PackageItineraryAccordion({
         ...item,
         dayNumber: item.day || index + 1,
         image: (item as TimelineItem).image,
-        tags: safeArray((item as TimelineItem).tags),
       }))
     }
-
     return Array.from({ length: fallbackDays }, (_, index) => {
       const theme = FALLBACK_DAY_THEMES[index % FALLBACK_DAY_THEMES.length]
       const highlight = safeHighlights[index] || safeHighlights[index % safeHighlights.length]
       return {
+        day: index + 1,
         dayNumber: index + 1,
         title: theme,
         description:
-          highlight ||
-          `A curated day in Bhutan with experiences tailored to ${packageTitle || "your interests"}.`,
+          highlight || `A curated day in Bhutan with experiences tailored to ${packageTitle || "your interests"}.`,
       }
     })
   }, [safeItinerary, fallbackDays, safeHighlights, packageTitle])
@@ -88,166 +139,136 @@ export function PackageItineraryAccordion({
     if (!safeItinerary.length || !durationDays || durationDays <= normalizedItems.length) {
       return normalizedItems
     }
-
     const remaining = durationDays - normalizedItems.length
     const appended = Array.from({ length: remaining }, (_, index) => ({
+      day: normalizedItems.length + index + 1,
       dayNumber: normalizedItems.length + index + 1,
       title: FALLBACK_DAY_THEMES[(normalizedItems.length + index) % FALLBACK_DAY_THEMES.length],
-      description:
-        safeHighlights[index] ||
-        `Additional exploration day tailored to ${packageTitle || "your travel style"}.`,
+      description: safeHighlights[index] || `Additional exploration day tailored to ${packageTitle || "your travel style"}.`,
     }))
-
     return [...normalizedItems, ...appended]
   }, [safeItinerary.length, durationDays, normalizedItems, safeHighlights, packageTitle])
 
-  const allValues = items.map((item) => `day-${item.dayNumber}-${item.title || item.dayNumber}`)
-  const [openItems, setOpenItems] = useState<string[]>(allValues.length ? [allValues[0]] : [])
+  const dayImages = useMemo(() => assignImages(items), [items])
 
   if (!items.length) {
     return (
       <p className="text-sm text-muted-foreground">
-        This journey is customized… we will share a day-by-day plan after inquiry.
+        This journey is fully customized — we&rsquo;ll share a detailed day-by-day plan after your inquiry.
       </p>
     )
   }
 
+  const phaseLabel = (n: number) => (n <= 1 ? "Arrival" : n >= items.length ? "Departure" : "Exploration")
+
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-          {openItems.length} of {items.length} days expanded
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={() => setOpenItems(allValues)}
-            aria-label="Expand all days"
-            className="rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-primary transition hover:bg-primary/20"
-          >
-            Expand all
-          </button>
-          <button
-            type="button"
-            onClick={() => setOpenItems([])}
-            aria-label="Collapse all days"
-            className="rounded-full border border-border/60 bg-background px-4 py-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground transition hover:border-primary/30 hover:text-foreground"
-          >
-            Collapse all
-          </button>
-        </div>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm text-muted-foreground">
+          <span className="font-semibold text-foreground">{items.length} days</span> of curated experiences
+        </p>
+        <p className="hidden text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground sm:block">
+          Hover a day to explore
+        </p>
       </div>
 
       <div className="relative">
-        <div className="pointer-events-none absolute left-6 top-4 h-[calc(100%-2rem)] w-1 rounded-full bg-gradient-to-b from-primary/40 via-primary/10 to-transparent" />
-        <Accordion type="multiple" value={openItems} onValueChange={setOpenItems}>
+        {/* timeline spine */}
+        <div className="pointer-events-none absolute bottom-6 left-[27px] top-6 w-px bg-gradient-to-b from-accent/50 via-border to-transparent" />
+
+        <div className="space-y-4">
           {items.map((item, index) => {
-            const value = allValues[index]
-            const isOpen = openItems.includes(value)
-            const bannerImage = item.image || heroImage
-            const tagSource = [item.title, item.description].filter(Boolean).join(" ")
-            const tags = safeArray(item.tags).length ? safeArray(item.tags) : buildTags(tagSource)
+            const bannerImage = dayImages[index]
+            const imageRight = index % 2 === 1 // alternate layout per day
 
             return (
-              <AccordionItem
-                key={value}
-                value={value}
-                className={cn(
-                  "group relative mb-6 rounded-3xl border border-border/70 bg-card/90 px-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md",
-                  isOpen && "border-primary/40 shadow-md",
-                )}
+              // Hover (or keyboard-focus) reveals the day detail. Touch devices, which
+              // can't hover, get the detail expanded by default via [@media(hover:none)].
+              <div
+                key={`day-${item.dayNumber}`}
+                tabIndex={0}
+                aria-label={`Day ${item.dayNumber}: ${item.title || "experience"}`}
+                className="group/day relative pl-16 outline-none"
               >
-                <div
-                  className={cn(
-                    "absolute left-4 top-8 h-4 w-4 -translate-x-1/2 rounded-full border-2 border-primary/40 bg-background shadow-sm transition",
-                    isOpen && "bg-primary shadow-[0_0_12px_rgba(56,189,248,0.6)]",
-                  )}
-                />
-                <AccordionTrigger>
-                  <div className="flex w-full items-start gap-4">
-                    <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-base font-semibold text-primary">
-                      {item.dayNumber}
-                    </div>
-                    <div className="flex flex-1 flex-col gap-2">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+                {/* day marker on the spine */}
+                <div className="absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border-2 border-border bg-card font-serif text-sm font-semibold text-primary transition-all duration-300 group-hover/day:border-accent group-hover/day:bg-accent group-hover/day:text-white group-focus-within/day:border-accent group-focus-within/day:bg-accent group-focus-within/day:text-white">
+                  {item.dayNumber}
+                </div>
+
+                <div className="overflow-hidden rounded-2xl border border-border/70 bg-card transition-all duration-300 group-hover/day:border-accent/40 group-hover/day:shadow-[0_20px_44px_-26px_rgba(18,37,54,0.4)] group-focus-within/day:border-accent/40">
+                  {/* Always-visible header */}
+                  <div className="flex items-center gap-4 px-5 py-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">
                           Day {item.dayNumber}
                         </span>
-                        <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary">
-                          Signature moment
+                        <span className="rounded-full bg-muted px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                          {phaseLabel(item.dayNumber)}
                         </span>
                       </div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-base font-semibold text-foreground md:text-lg">
-                          {item.title || `Day ${item.dayNumber} experience`}
-                        </span>
-                        <span className="rounded-full border border-border/60 bg-background px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
-                          {item.dayNumber <= 2 ? "Arrival" : item.dayNumber >= items.length ? "Departure" : "Experience"}
-                        </span>
-                      </div>
-                      {tags.length ? (
-                        <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                          {tags.map((tag) => (
-                            <span key={tag} className="rounded-full border border-border/60 bg-muted/60 px-3 py-1">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      ) : null}
+                      <h3 className="mt-1 truncate font-serif text-lg font-semibold text-foreground transition-colors group-hover/day:text-accent">
+                        {item.title || `Day ${item.dayNumber} experience`}
+                      </h3>
                     </div>
+                    <Plus className="h-5 w-5 shrink-0 text-muted-foreground transition-all duration-300 group-hover/day:rotate-45 group-hover/day:text-accent group-focus-within/day:rotate-45 group-focus-within/day:text-accent" />
                   </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-5">
-                    <div className="relative aspect-[21/9] overflow-hidden rounded-2xl border border-border/60">
-                      {bannerImage ? (
-                        <>
-                          <Image
-                            src={bannerImage}
-                            alt={item.title || packageTitle || "Itinerary highlight"}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 768px) 100vw, 800px"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
-                          <div className="absolute bottom-4 left-4 space-y-1 text-white">
-                            <p className="text-xs uppercase tracking-[0.3em] text-white/70">Signature moment</p>
-                            <p className="text-lg font-semibold">{item.title || `Day ${item.dayNumber}`}</p>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="h-full w-full bg-gradient-to-r from-primary/20 via-accent/10 to-background" />
-                      )}
-                    </div>
 
-                    <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-                      <p className="leading-relaxed text-sm md:text-base text-muted-foreground">
-                        {item.description || "Detailed itinerary coming soon."}
-                      </p>
-                      <div className="grid gap-3">
-                        {[
-                          { label: "Pacing", value: "Balanced" },
-                          { label: "Guide", value: "Private" },
-                          { label: "Transfers", value: "Door-to-door" },
-                        ].map((meta) => (
-                          <div
-                            key={meta.label}
-                            className="rounded-2xl border border-border/60 bg-background px-4 py-3"
-                          >
-                            <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-                              {meta.label}
-                            </p>
-                            <p className="mt-1 text-sm font-semibold text-foreground">{meta.value}</p>
+                  {/* Hover-reveal content (smooth height via grid-rows 0fr→1fr) */}
+                  <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out group-hover/day:grid-rows-[1fr] group-focus-within/day:grid-rows-[1fr] [@media(hover:none)]:grid-rows-[1fr]">
+                    <div className="overflow-hidden">
+                      <div className="px-5 pb-6">
+                        {/* Alternating zig-zag layout so each day reads differently */}
+                        <div className={cn("grid gap-5 md:grid-cols-2 md:items-stretch", imageRight && "md:[&>*:first-child]:order-2")}>
+                          <div className="relative min-h-48 overflow-hidden rounded-xl md:min-h-full">
+                            <Image
+                              src={bannerImage}
+                              alt={item.title || packageTitle || "Itinerary highlight"}
+                              fill
+                              className="object-cover transition-transform duration-700 ease-out group-hover/day:scale-105"
+                              sizes="(max-width: 768px) 100vw, 360px"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
+                            <span className="absolute left-3 top-3 rounded-full bg-black/45 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
+                              Day {item.dayNumber}
+                            </span>
                           </div>
-                        ))}
+
+                          <div className="flex flex-col justify-center py-1">
+                            <p className="leading-relaxed text-muted-foreground">
+                              {item.description || "Detailed itinerary coming soon."}
+                            </p>
+
+                            {(item.stay || item.meals) && (
+                              <div className="mt-5 grid gap-2.5 border-t border-border/70 pt-4 text-sm">
+                                {item.stay ? (
+                                  <span className="inline-flex items-center gap-2 text-foreground/80">
+                                    <BedDouble className="h-4 w-4 shrink-0 text-accent" />
+                                    <span className="text-muted-foreground">Stay:</span> {item.stay}
+                                  </span>
+                                ) : null}
+                                {item.meals ? (
+                                  <span className="inline-flex items-center gap-2 text-foreground/80">
+                                    <Utensils className="h-4 w-4 shrink-0 text-accent" />
+                                    <span className="text-muted-foreground">Meals:</span> {item.meals}
+                                  </span>
+                                ) : null}
+                                <span className="inline-flex items-center gap-2 text-foreground/80">
+                                  <MapPin className="h-4 w-4 shrink-0 text-accent" />
+                                  <span className="text-muted-foreground">Guide:</span> Private, licensed
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </AccordionContent>
-              </AccordionItem>
+                </div>
+              </div>
             )
           })}
-        </Accordion>
+        </div>
       </div>
     </div>
   )

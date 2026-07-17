@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react"
 import Image from "next/image"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -44,6 +44,7 @@ export function PackageGalleryLightbox({ images, title }: { images: string[]; ti
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-4xl p-0 overflow-hidden">
+          <DialogTitle className="sr-only">{title} — photo gallery</DialogTitle>
           <div className="relative aspect-[16/9] bg-black">
             <Image
               src={gallery[activeIndex]}

@@ -2,7 +2,8 @@ import Link from "next/link"
 
 export function Footer() {
   return (
-    <footer className="border-t bg-gradient-to-br from-[#0f1f4b] via-[#1e3a8a] to-[#0b2f2a] text-white">
+    <footer className="relative bg-primary text-white">
+      <div className="rule-gold" />
       <div className="container mx-auto px-4 py-16 md:px-6">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
           <div className="space-y-4 lg:col-span-2">
@@ -104,8 +105,8 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="mailto:bhutanaraviapeaks@gmail.com" className="hover:text-white transition-colors">
-                  bhutanaraviapeaks@gmail.com
+                <a href="mailto:bhutanaraviapeak@gmail.com" className="hover:text-white transition-colors">
+                  bhutanaraviapeak@gmail.com
                 </a>
               </li>
             </ul>

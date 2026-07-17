@@ -65,7 +65,7 @@ export const packages: TourPackage[] = [
     bestTime: "March–April",
     groupSize: "2–12 guests",
     comfortLevel: "Comfort",
-    heroImage: "/paro-tshechu-festival-bhutan-colorful-masks-dancin.jpg",
+    heroImage: "/images/packages/paro-tshechu.jpg",
     gallery: [
       "/bhutan-festival-masked-dancers-colorful-costumes-c.jpg",
       "/thimphu-tshechu-festival-bhutan-colorful-masks-dan.jpg",
@@ -162,7 +162,7 @@ export const packages: TourPackage[] = [
     bestTime: "September–October",
     groupSize: "2–12 guests",
     comfortLevel: "Comfort",
-    heroImage: "/thimphu-tshechu-festival-bhutan-colorful-masks-dan.jpg",
+    heroImage: "/images/packages/thimphu-tshechu.jpg",
     gallery: [
       "/bhutanese-crowd-festival-colorful-traditional-dres.jpg",
       "/thimphu-festival-bhutan-celebration-traditional-da.jpg",
@@ -206,7 +206,7 @@ export const packages: TourPackage[] = [
     bestTime: "February–March",
     groupSize: "2–12 guests",
     comfortLevel: "Comfort",
-    heroImage: "/punakha-dzong-festival-bhutan-fortress.jpg",
+    heroImage: "/images/packages/punakha-drubchen.jpg",
     gallery: [
       "/bhutan-punakha-dzong-fortress-river-valley-traditi.jpg",
       "/punakha-dzong-fortress-rivers-confluence-bhutan-re.jpg",
@@ -243,7 +243,7 @@ export const packages: TourPackage[] = [
     bestTime: "October–November",
     groupSize: "2–10 guests",
     comfortLevel: "Comfort",
-    heroImage: "/jambay-lhakhang-fire-ceremony-bhutan-temple.jpg",
+    heroImage: "/images/packages/jambay-lhakhang.jpg",
     gallery: [
       "/bhutan-bumthang-valley-ancient-temples-monasteries.jpg",
       "/bhutan-bumthang-farmhouse-countryside.jpg",
@@ -272,7 +272,7 @@ export const packages: TourPackage[] = [
     bestTime: "March–May, Sep–Nov",
     groupSize: "2–15 guests",
     comfortLevel: "Comfort",
-    heroImage: "/tigers-nest-monastery-bhutan-cliff-mountain.jpg",
+    heroImage: "/images/packages/cultural-heritage.jpg",
     gallery: [
       "/paro-dzong-rinpung-dzong-fortress-bhutan-real-phot.jpg",
       "/bhutan-traditional-colorful-dzong-fortress-archite.jpg",
@@ -307,7 +307,7 @@ export const packages: TourPackage[] = [
     bestTime: "Year-round",
     groupSize: "2–12 guests",
     comfortLevel: "Premium",
-    heroImage: "/bhutan-monastery-meditation-monks-spiritual-peace.jpg",
+    heroImage: "/images/packages/spiritual-journey.jpg",
     gallery: [
       "/bhutanese-buddhist-monks-meditation-prayer-hall-au.jpg",
       "/bhutan-buddhist-monks-prayer-ceremony-monastery.jpg",
@@ -334,7 +334,7 @@ export const packages: TourPackage[] = [
     bestTime: "Year-round",
     groupSize: "2–15 guests",
     comfortLevel: "Comfort",
-    heroImage: "/punakha-valley-bhutan-rice-fields-landscape.jpg",
+    heroImage: "/images/packages/western-highlights.jpg",
     gallery: [
       "/bhutan-dochula-pass-108-chortens-himalayan-mountain.jpg",
       "/tashichho-dzong-thimphu-bhutan-fortress-evening-li.jpg",
@@ -361,7 +361,7 @@ export const packages: TourPackage[] = [
     bestTime: "Year-round",
     groupSize: "2–10 guests",
     comfortLevel: "Comfort",
-    heroImage: "/eastern-bhutan-remote-villages-mountains.jpg",
+    heroImage: "/images/packages/eastern-bhutan.jpg",
     gallery: [
       "/eastern-bhutan-mongar-dzong-mountain-fortress.jpg",
       "/bhutan-eastern-trashigang-traditional-weaving-wome.jpg",
@@ -388,7 +388,7 @@ export const packages: TourPackage[] = [
     bestTime: "April–June, Sep–Oct",
     groupSize: "4–12 guests",
     comfortLevel: "Premium",
-    heroImage: "/druk-path-trek-alpine-lakes-mountains-bhutan.jpg",
+    heroImage: "/images/packages/druk-path-trek.jpg",
     gallery: [
       "/bhutan-druk-path-trek-jimilang-lake-pristine-alpin.jpg",
       "/bhutan-druk-path-trek-himalayan-mountains-alpine-l.jpg",
@@ -415,7 +415,7 @@ export const packages: TourPackage[] = [
     bestTime: "April–June, Sep–Oct",
     groupSize: "4–10 guests",
     comfortLevel: "Premium",
-    heroImage: "/mt-jomolhari-bhutan-snow-mountain-base-camp.jpg",
+    heroImage: "/images/packages/jomolhari-trek.jpg",
     gallery: [
       "/jomolhari-mountain-peak-7326m-sacred-snow-summit-b.jpg",
       "/bhutan-high-altitude-trekking-camp-tents-mountain-.jpg",
@@ -442,7 +442,7 @@ export const packages: TourPackage[] = [
     bestTime: "Sep–Oct",
     groupSize: "4–10 guests",
     comfortLevel: "Luxury",
-    heroImage: "/bhutan-snowman-trek-extreme-himalayan-mountains-sn.jpg",
+    heroImage: "/images/packages/snowman-trek.jpg",
     gallery: [
       "/bhutan-snowman-trek-high-pass-5000m-extreme-condit.jpg",
       "/bhutan-lunana-region-remote-village-yak-herders-ex.jpg",
@@ -469,7 +469,7 @@ export const packages: TourPackage[] = [
     bestTime: "April–June, Sep–Oct",
     groupSize: "4–12 guests",
     comfortLevel: "Premium",
-    heroImage: "/bhutan-alpine-glacial-lakes-mountains-pristine-wil.jpg",
+    heroImage: "/images/packages/dagala-thousand-lakes.jpg",
     gallery: [
       "/bhutan-himalayan-mountain-landscape-kingdom-thunde.jpg",
       "/bhutan-himalayan-mountains-prayer-flags-temple-scenic.jpg",
@@ -496,7 +496,7 @@ export const packages: TourPackage[] = [
     bestTime: "Year-round",
     groupSize: "2–8 guests",
     comfortLevel: "Luxury",
-    heroImage: "/luxury-resort-bhutan-mountains-spa-five-star-hotel.jpg",
+    heroImage: "/images/packages/luxury-bhutan.jpg",
     gallery: [
       "/luxury-resort-bhutan-mountains-five-star-hotel-spa.jpg",
       "/bhutan-paro-taktsang-monastery-tiger-nest-mountain.jpg",
@@ -523,7 +523,7 @@ export const packages: TourPackage[] = [
     bestTime: "Year-round",
     groupSize: "2–8 guests",
     comfortLevel: "Luxury",
-    heroImage: "/bhutan-wellness-spa-hot-stone-bath-meditation-retr.jpg",
+    heroImage: "/images/packages/luxury-wellness.jpg",
     gallery: [
       "/gasa-hot-springs-bhutan-natural-thermal-pools.jpg",
       "/phobjikha-valley-glacial-bhutan-black-necked-crane.jpg",
@@ -550,7 +550,7 @@ export const packages: TourPackage[] = [
     bestTime: "Year-round",
     groupSize: "2–10 guests",
     comfortLevel: "Premium",
-    heroImage: "/bhutan-photography-landscape-monks-temples-colorfu.jpg",
+    heroImage: "/images/packages/photography-tour.jpg",
     gallery: [
       "/bhutan-prayer-flags-mountain-landscape.jpg",
       "/bhutan-himalayan-mountains-prayer-flags-temple-scenic.jpg",
@@ -577,7 +577,7 @@ export const packages: TourPackage[] = [
     bestTime: "Winter & Spring",
     groupSize: "2–10 guests",
     comfortLevel: "Comfort",
-    heroImage: "/bhutan-himalayan-birds-black-necked-crane-colorful.jpg",
+    heroImage: "/images/packages/birdwatching.jpg",
     gallery: [
       "/phobjikha-valley-glacial-bhutan-black-necked-crane.jpg",
       "/traditional-bhutanese-village-houses-farmland-auth.jpg",
@@ -604,7 +604,7 @@ export const packages: TourPackage[] = [
     bestTime: "Year-round",
     groupSize: "Flexible",
     comfortLevel: "Premium",
-    heroImage: "/bhutan-himalayan-mountain-landscape-kingdom-thunde.jpg",
+    heroImage: "/images/packages/custom-journey.jpg",
     gallery: [
       "/bhutan-paro-taktsang-monastery-tiger-nest-mountain.jpg",
       "/bhutan-traditional-colorful-dzong-architecture.jpg",

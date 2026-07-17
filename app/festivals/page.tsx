@@ -3,11 +3,19 @@
 import { useLanguage } from "@/lib/language-context"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import Image from "next/image"
+import {
+  CalendarDays,
+  MapPin,
+  Clock,
+  Sparkles,
+  ArrowRight,
+  CalendarClock,
+  BookMarked,
+  Shirt,
+  Camera,
+} from "lucide-react"
 
 const festivalSchedule2026 = [
   { festival: "Lhamoi Dromche", location: "Trongsa", date: "Feb 23-25" },
@@ -39,7 +47,7 @@ const festivalSchedule2026 = [
   { festival: "Gangtey Tshechu", location: "Gangtey, Phobjikha Valley", date: "Sep 16-18" },
   { festival: "Thangbi Mani", location: "Choekor, Bumthang", date: "Sep 17-19" },
   { festival: "Jhomolhari Mountain Festival", location: "Dangochang (Jhomolhari Base Camp)", date: "Oct 14-15" },
-  { festival: "Royal Highland Festival", location: "TBA", date: "Oct 23-24" },
+  { festival: "Royal Highlander Festival", location: "TBA", date: "Oct 23-24" },
   { festival: "Chukha Tshechu", location: "Chukha", date: "Nov 11-13" },
   { festival: "Jakar Tshechu", location: "Choekor, Bumthang", date: "Nov 8-12" },
   { festival: "Jambay Lhakhang Drup", location: "Choekor, Bumthang", date: "Nov 15-18", popular: true },
@@ -62,18 +70,12 @@ const festivals = [
     id: "paro-tshechu",
     name: "Paro Tshechu",
     month: "March-April",
-    dates: "Dates vary (Lunar Calendar)",
     location: "Paro Dzong",
     description:
       "The most famous festival in Bhutan, featuring spectacular masked dances, the unfurling of the giant thongdrel, and thousands of pilgrims from across the kingdom.",
-    highlights: [
-      "Sacred mask dances",
-      "Giant thongdrel unveiling",
-      "Atsara (clowns) performances",
-      "Traditional music",
-    ],
+    highlights: ["Sacred mask dances", "Giant thongdrel unveiling", "Atsara performances"],
     duration: "5 days",
-    image: "/paro-tshechu-festival-bhutan-colorful-masks-dancin.jpg",
+    image: "/images/packages/paro-tshechu.jpg",
     packageLink: "/packages/festival/paro-tshechu",
     popular: true,
   },
@@ -81,18 +83,12 @@ const festivals = [
     id: "thimphu-tshechu",
     name: "Thimphu Tshechu",
     month: "September-October",
-    dates: "Dates vary (Lunar Calendar)",
     location: "Tashichho Dzong, Thimphu",
     description:
       "Bhutan's largest festival held in the capital, attracting massive crowds to witness sacred dances and receive blessings in the presence of the royal family.",
-    highlights: [
-      "Largest festival gathering",
-      "Royal family attendance",
-      "Spectacular costumes",
-      "Religious ceremonies",
-    ],
+    highlights: ["Largest festival gathering", "Royal family attendance", "Spectacular costumes"],
     duration: "3 days",
-    image: "/thimphu-tshechu-festival-dancers-masks.jpg",
+    image: "/images/packages/thimphu-tshechu.jpg",
     packageLink: "/packages/festival/thimphu-tshechu",
     popular: true,
   },
@@ -100,50 +96,46 @@ const festivals = [
     id: "punakha-drubchen",
     name: "Punakha Drubchen & Tshechu",
     month: "February-March",
-    dates: "Dates vary (Lunar Calendar)",
     location: "Punakha Dzong",
     description:
       "Unique festival featuring dramatic reenactments of historic battles, followed by traditional tshechu dances in one of Bhutan's most beautiful dzongs.",
-    highlights: ["Battle reenactments", "Warrior dances", "Punakha Dzong setting", "Spring blooms"],
+    highlights: ["Battle reenactments", "Warrior dances", "Punakha Dzong setting"],
     duration: "4 days",
-    image: "/punakha-dzong-festival-bhutan-fortress.jpg",
+    image: "/images/packages/punakha-drubchen.jpg",
     packageLink: "/packages/festival/punakha-drubchen",
   },
   {
     id: "jambay-lhakhang",
     name: "Jambay Lhakhang Drup",
     month: "October-November",
-    dates: "Dates vary (Lunar Calendar)",
     location: "Jambay Lhakhang, Bumthang",
     description:
       "One of the most unique festivals featuring the sacred fire ceremony and midnight naked dance, performed to bless infertile women.",
-    highlights: ["Fire ceremony", "Midnight naked dance", "Ancient temple setting", "Spiritual blessings"],
+    highlights: ["Sacred fire ceremony", "Ancient temple setting", "Spiritual blessings"],
     duration: "3 days",
-    image: "/jambay-lhakhang-fire-ceremony-bhutan-temple.jpg",
+    image: "/images/packages/jambay-lhakhang.jpg",
     packageLink: "/packages/festival/jambay-lhakhang",
   },
   {
     id: "black-necked-crane",
     name: "Black-Necked Crane Festival",
     month: "November",
-    dates: "November 11",
     location: "Phobjikha Valley",
     description:
       "Celebrates the arrival of endangered black-necked cranes to Phobjikha Valley with cultural performances, conservation awareness, and nature walks.",
-    highlights: ["Crane spotting", "Environmental awareness", "Folk dances", "Valley exploration"],
+    highlights: ["Crane spotting", "Environmental awareness", "Folk dances"],
     duration: "1 day",
-    image: "/bhutan-himalayan-birds-black-necked-crane-colorful.jpg",
+    image: "/images/packages/birdwatching.jpg",
     packageLink: "/packages",
   },
   {
     id: "wangdue-tshechu",
     name: "Wangdue Phodrang Tshechu",
     month: "September-October",
-    dates: "Dates vary (Lunar Calendar)",
     location: "Wangdue Phodrang",
     description:
       "Traditional festival featuring the famous Raksha Mangcham (Ox Dance) and other sacred mask dances unique to this region.",
-    highlights: ["Ox Dance", "Regional traditions", "Mountain views", "Local culture"],
+    highlights: ["Ox Dance", "Regional traditions", "Mountain views"],
     duration: "3 days",
     image: "/wangdue-phodrang-tshechu-festival-ox-dance-bhutan.jpg",
     packageLink: "/packages",
@@ -152,11 +144,10 @@ const festivals = [
     id: "haa-summer",
     name: "Haa Summer Festival",
     month: "July",
-    dates: "Mid-July",
     location: "Haa Valley",
     description:
       "Celebrates the nomadic herders of Haa Valley with yak rides, traditional games, local cuisine, and stunning alpine scenery.",
-    highlights: ["Yak culture", "Traditional sports", "Local cuisine", "Alpine setting"],
+    highlights: ["Yak culture", "Traditional sports", "Alpine setting"],
     duration: "2 days",
     image: "/haa-valley-summer-festival-yak-nomadic-herders.jpg",
     packageLink: "/packages",
@@ -165,16 +156,22 @@ const festivals = [
     id: "royal-highlander",
     name: "Royal Highlander Festival",
     month: "October",
-    dates: "Mid-October",
     location: "Laya, Gasa",
     description:
       "Remote highland festival celebrating the unique culture of the highland communities, featuring yak shows and traditional customs.",
-    highlights: ["Highland culture", "Yak competitions", "Remote location", "Unique traditions"],
+    highlights: ["Highland culture", "Yak competitions", "Remote location"],
     duration: "2 days",
     image: "/royal-highlander-festival-laya-highland-culture.jpg",
     packageLink: "/packages",
   },
 ]
+
+const notes = [
+  { icon: CalendarClock, titleKey: "festivals_dates_vary", descKey: "festivals_dates_vary_description" },
+  { icon: BookMarked, titleKey: "festivals_book_early", descKey: "festivals_book_early_description" },
+  { icon: Shirt, titleKey: "festivals_what_to_wear", descKey: "festivals_what_to_wear_description" },
+  { icon: Camera, titleKey: "festivals_photography_etiquette", descKey: "festivals_photography_etiquette_description" },
+] as const
 
 export default function FestivalsPage() {
   const { t } = useLanguage()
@@ -184,243 +181,242 @@ export default function FestivalsPage() {
       <Header />
 
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="relative py-16 md:py-24 overflow-hidden">
+        {/* Hero */}
+        <section className="relative overflow-hidden pb-16 pt-28 md:pb-24 md:pt-36">
           <div className="absolute inset-0">
             <Image
               src="/bhutan-paro-taktsang-monastery-tiger-nest-mountain.jpg"
               alt="Bhutan festivals"
               fill
               priority
-              className="object-cover"
+              className="scale-105 object-cover"
             />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-background" />
             <div className="absolute inset-0 hero-gradient" />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-background" />
           </div>
-          <div className="container px-4 md:px-6 relative z-10">
+          <div className="container relative z-10 px-4 md:px-6">
             <div className="mx-auto max-w-3xl text-center">
-              <Badge className="mb-4 bg-primary text-primary-foreground shadow-sm">{t("festivals_badge")}</Badge>
-              <h1 className="font-serif text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl mb-6 text-balance text-white">
+              <span className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/90 backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent" /> {t("festivals_badge")}
+              </span>
+              <h1 className="mb-6 font-serif text-4xl font-semibold leading-[1.05] tracking-tight text-balance text-white sm:text-5xl md:text-6xl">
                 {t("festivals_title")}
               </h1>
-              <p className="text-lg text-white/90 text-balance">{t("festivals_description")}</p>
+              <p className="text-lg text-white/85 text-balance">{t("festivals_description")}</p>
             </div>
           </div>
         </section>
 
-        {/* Bhutanese Festival Schedule */}
-        <section className="py-12 md:py-16 section-tint">
+        {/* What are Tshechus */}
+        <section className="py-20 md:py-28">
           <div className="container px-4 md:px-6">
-            <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-8">
-                <h2 className="font-serif text-3xl font-bold mb-2">Bhutanese Festival Schedule 2026</h2>
-                <p className="text-muted-foreground">Complete list of festivals happening throughout the year</p>
-              </div>
-
-              <Card className="card-premium glass-card border border-border/60 shadow-sm">
-                <CardContent className="p-6">
-                  <div className="overflow-x-auto">
-                    <table className="w-full border-collapse">
-                      <thead>
-                        <tr className="border-b border-border">
-                          <th className="text-left py-3 px-4 font-semibold bg-muted">
-                            Festival
-                          </th>
-                          <th className="text-left py-3 px-4 font-semibold bg-muted">
-                            Location
-                          </th>
-                          <th className="text-left py-3 px-4 font-semibold bg-muted">
-                            Date
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {festivalSchedule2026.map((item, index) => (
-                          <tr
-                            key={index}
-                            className={`border-b border-border/60 hover:bg-muted/40 transition-colors ${
-                              item.popular ? "bg-muted/30" : ""
-                            }`}
-                          >
-                            <td className="py-3 px-4">
-                              <div className="flex items-center gap-2">
-                                <span className="font-medium text-foreground">{item.festival}</span>
-                                {item.popular && (
-                                  <Badge className="text-xs bg-primary text-primary-foreground border-0">
-                                    Popular
-                                  </Badge>
-                                )}
-                              </div>
-                            </td>
-                            <td className="py-3 px-4 text-muted-foreground">{item.location}</td>
-                            <td className="py-3 px-4 text-muted-foreground">{item.date}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div className="mt-6 p-4 bg-muted/40 rounded-lg border border-border">
-                    <p className="text-sm text-muted-foreground">
-                      <strong className="text-foreground">Note:</strong> You may choose the festival of your interest
-                      from the above list and contact us. We will provide more detailed information on your choice of
-                      festivals.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        {/* About Festivals */}
-        <section className="relative py-12 md:py-16 section-tint">
-          <div className="container px-4 md:px-6 relative z-10">
-            <div className="max-w-3xl mx-auto text-center mb-12">
-              <h2 className="font-serif text-2xl font-bold mb-4">{t("festivals_what_are")}</h2>
-              <p className="text-muted-foreground">{t("festivals_explanation")}</p>
+            <div className="mx-auto max-w-2xl text-center">
+              <span className="eyebrow justify-center">Sacred Tradition</span>
+              <h2 className="mt-5 font-serif text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl">
+                {t("festivals_what_are")}
+              </h2>
+              <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{t("festivals_explanation")}</p>
             </div>
           </div>
         </section>
 
         {/* Featured Festivals Grid */}
-        <section className="py-12 md:py-16 section-tint">
+        <section className="py-20 md:py-28 section-tint">
           <div className="container px-4 md:px-6">
-            <div className="text-center mb-12">
-              <h2 className="font-serif text-3xl font-bold mb-2">Featured Festivals</h2>
-              <p className="text-muted-foreground">Experience the most celebrated festivals in Bhutan</p>
+            <div className="mx-auto max-w-2xl text-center">
+              <span className="eyebrow justify-center">Signature Celebrations</span>
+              <h2 className="mt-5 font-serif text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl">
+                Featured Festivals
+              </h2>
+              <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+                Experience the most celebrated festivals in Bhutan
+              </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-14 grid gap-7 md:grid-cols-2 lg:grid-cols-3">
               {festivals.map((festival) => (
-                <Card
-                  key={festival.id}
-                  className="card-premium glass-card overflow-hidden group transition-all duration-300 border border-border/60"
-                >
+                <div key={festival.id} className="group card-premium flex flex-col overflow-hidden">
                   <div className="relative h-56 overflow-hidden">
                     <Image
                       src={festival.image}
                       alt={festival.name}
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
                     {festival.popular && (
-                      <div className="absolute top-4 right-4">
-                        <Badge className="bg-primary text-primary-foreground border-0 shadow-sm">
-                          {t("festivals_most_popular")}
-                        </Badge>
-                      </div>
+                      <span className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white shadow-sm">
+                        <Sparkles className="h-3 w-3" /> {t("festivals_most_popular")}
+                      </span>
                     )}
-
                     <div className="absolute bottom-4 left-4 right-4">
-                      <h3 className="font-semibold text-xl text-white mb-1">{festival.name}</h3>
-                      <div className="flex items-center gap-2 text-white/90 text-sm">
-                        <span>📅</span>
+                      <h3 className="font-serif text-xl font-semibold text-white">{festival.name}</h3>
+                      <div className="mt-1 flex items-center gap-1.5 text-sm text-white/85">
+                        <CalendarDays className="h-3.5 w-3.5" />
                         <span>{festival.month}</span>
                       </div>
                     </div>
                   </div>
 
-                  <CardContent className="p-6">
-                    <div className="mb-3 flex items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <span>📍</span>
-                        <span>{festival.location}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span>⏰</span>
-                        <span>{festival.duration}</span>
-                      </div>
+                  <div className="flex flex-1 flex-col p-6">
+                    <div className="mb-3 flex items-center gap-4 text-xs font-medium text-muted-foreground">
+                      <span className="inline-flex items-center gap-1.5">
+                        <MapPin className="h-3.5 w-3.5 text-accent" /> {festival.location}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Clock className="h-3.5 w-3.5 text-accent" /> {festival.duration}
+                      </span>
                     </div>
 
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-3">{festival.description}</p>
+                    <p className="flex-1 text-sm leading-relaxed text-muted-foreground">{festival.description}</p>
 
-                    <div className="mb-4">
-                      <p className="text-xs font-semibold mb-2">{t("festivals_highlights")}</p>
-                      <div className="flex flex-wrap gap-1">
-                        {festival.highlights.slice(0, 3).map((highlight, i) => (
-                          <Badge key={i} variant="outline" className="text-xs">
+                    <div className="mt-4">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
+                        {t("festivals_highlights")}
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {festival.highlights.map((highlight) => (
+                          <span
+                            key={highlight}
+                            className="rounded-full border border-border/70 bg-muted/50 px-2.5 py-1 text-[11px] text-foreground/75"
+                          >
                             {highlight}
-                          </Badge>
+                          </span>
                         ))}
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t border-border">
-                      <Button className="w-full btn-premium hover-glow" asChild>
-                        <Link href={festival.packageLink}>{t("festivals_view_package")}</Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                    <Link
+                      href={festival.packageLink}
+                      className="btn-premium mt-6 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold tracking-wide"
+                    >
+                      {t("festivals_view_package")}
+                    </Link>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Important Notes */}
-        <section className="relative py-16 md:py-24 section-tint">
-          <div className="container px-4 md:px-6 relative z-10">
-            <div className="max-w-3xl mx-auto">
-              <h2 className="font-serif text-3xl font-bold text-center mb-8">
-                {t("festivals_important_notes_title")}
+        {/* Full Festival Schedule */}
+        <section className="py-20 md:py-28">
+          <div className="container px-4 md:px-6">
+            <div className="mx-auto max-w-3xl text-center">
+              <span className="eyebrow justify-center">Plan Ahead</span>
+              <h2 className="mt-5 font-serif text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl">
+                Bhutanese Festival Schedule 2026
               </h2>
-              <div className="space-y-4">
-                <Card className="card-premium border-l-4 border-l-primary shadow-sm hover:shadow-md transition-shadow">
-                  <CardContent className="p-6 bg-card">
-                    <h3 className="font-semibold text-lg mb-2">{t("festivals_dates_vary")}</h3>
-                    <p className="text-sm text-muted-foreground">{t("festivals_dates_vary_description")}</p>
-                  </CardContent>
-                </Card>
+              <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+                Complete list of festivals happening throughout the year
+              </p>
+            </div>
 
-                <Card className="card-premium border-l-4 border-l-primary shadow-sm hover:shadow-md transition-shadow">
-                  <CardContent className="p-6 bg-card">
-                    <h3 className="font-semibold text-lg mb-2">{t("festivals_book_early")}</h3>
-                    <p className="text-sm text-muted-foreground">{t("festivals_book_early_description")}</p>
-                  </CardContent>
-                </Card>
+            <div className="mx-auto mt-14 max-w-5xl">
+              <div className="card-premium overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse text-sm">
+                    <thead>
+                      <tr className="border-b border-border/70 bg-muted/40">
+                        <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                          Festival
+                        </th>
+                        <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                          Location
+                        </th>
+                        <th className="px-5 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                          Date
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {festivalSchedule2026.map((item, index) => (
+                        <tr
+                          key={index}
+                          className={`border-b border-border/50 transition-colors last:border-0 hover:bg-accent/5 ${
+                            item.popular ? "bg-accent/[0.04]" : ""
+                          }`}
+                        >
+                          <td className="px-5 py-3.5">
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium text-foreground">{item.festival}</span>
+                              {item.popular && (
+                                <span className="inline-flex items-center rounded-full bg-accent/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent">
+                                  Popular
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-5 py-3.5 text-muted-foreground">{item.location}</td>
+                          <td className="px-5 py-3.5 text-muted-foreground">{item.date}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
 
-                <Card className="card-premium border-l-4 border-l-primary shadow-sm hover:shadow-md transition-shadow">
-                  <CardContent className="p-6 bg-card">
-                    <h3 className="font-semibold text-lg mb-2">{t("festivals_what_to_wear")}</h3>
-                    <p className="text-sm text-muted-foreground">{t("festivals_what_to_wear_description")}</p>
-                  </CardContent>
-                </Card>
-
-                <Card className="card-premium border-l-4 border-l-primary shadow-sm hover:shadow-md transition-shadow">
-                  <CardContent className="p-6 bg-card">
-                    <h3 className="font-semibold text-lg mb-2">
-                      {t("festivals_photography_etiquette")}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">{t("festivals_photography_etiquette_description")}</p>
-                  </CardContent>
-                </Card>
+                <div className="border-t border-border/70 bg-muted/30 px-5 py-4">
+                  <p className="text-sm text-muted-foreground">
+                    <strong className="text-foreground">Note:</strong> Choose the festival of your interest from the
+                    list above and contact us — we&rsquo;ll provide more detailed information and help plan your trip
+                    around it.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="relative py-16 md:py-24 overflow-hidden">
-          <div className="absolute inset-0">
-            <Image
-              src="/bhutan-festival-masked-dancers-colorful-costumes-c.jpg"
-              alt="Bhutan festival"
-              fill
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/60 to-black/70" />
-          </div>
-          <div className="container px-4 md:px-6 relative z-10">
+        {/* Important Notes */}
+        <section className="py-20 md:py-28 section-tint">
+          <div className="container px-4 md:px-6">
             <div className="mx-auto max-w-2xl text-center">
-              <h2 className="font-serif text-3xl font-bold text-white mb-4">{t("festivals_cta_title")}</h2>
-              <p className="text-lg text-white/90 mb-8">{t("festivals_cta_description")}</p>
-              <Button size="lg" className="btn-premium hover-glow" asChild>
-                <Link href="/inquiry">{t("festivals_cta_button")}</Link>
-              </Button>
+              <span className="eyebrow justify-center">Before You Go</span>
+              <h2 className="mt-5 font-serif text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl">
+                {t("festivals_important_notes_title")}
+              </h2>
+            </div>
+
+            <div className="mx-auto mt-14 grid max-w-4xl gap-6 sm:grid-cols-2">
+              {notes.map(({ icon: Icon, titleKey, descKey }) => (
+                <div key={titleKey} className="card-premium p-7">
+                  <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-accent/25 bg-accent/10 text-accent">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="font-serif text-lg font-semibold">{t(titleKey)}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t(descKey)}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="relative overflow-hidden bg-primary py-20 text-primary-foreground md:py-28">
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.08]"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 12% 20%, #b08733 0%, transparent 42%), radial-gradient(circle at 88% 85%, #1d5238 0%, transparent 46%)",
+            }}
+          />
+          <div className="container relative mx-auto px-4 text-center md:px-6">
+            <span className="eyebrow justify-center">Join the Celebration</span>
+            <h2 className="mx-auto mt-5 max-w-2xl font-serif text-3xl font-semibold leading-tight text-balance text-white sm:text-4xl">
+              {t("festivals_cta_title")}
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-balance text-white/70">
+              {t("festivals_cta_description")}
+            </p>
+            <div className="mt-9 flex justify-center">
+              <Link
+                href="/inquiry"
+                className="btn-premium group inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-sm font-semibold tracking-wide"
+              >
+                {t("festivals_cta_button")}
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
             </div>
           </div>
         </section>

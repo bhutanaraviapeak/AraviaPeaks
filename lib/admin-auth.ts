@@ -1,14 +1,12 @@
 import type { NextRequest } from "next/server"
 
 export const ADMIN_SESSION_COOKIE = "admin_session"
-const ADMIN_USER = "admin"
-const ADMIN_PASS = "Ghost006*"
 const ADMIN_SESSION_TOKEN = "admin-session-token"
 
 export const getAdminCredentials = () => {
   return {
-    username: ADMIN_USER,
-    password: ADMIN_PASS,
+    username: process.env.ADMIN_USERNAME || "admin",
+    password: process.env.ADMIN_PASSWORD || "Ghost006*",
   }
 }
 

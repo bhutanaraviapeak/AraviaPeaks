@@ -81,8 +81,6 @@ export async function POST(request: Request) {
     return NextResponse.redirect(new URL(`/inquiry?${params.toString()}`, request.url), 303)
   }
 
-  console.info("[inquiry] Store request stub", { ...data, referenceNumber: result.referenceNumber })
-
   const successParams = new URLSearchParams({
     ref: result.referenceNumber || "",
     name: data.fullName,

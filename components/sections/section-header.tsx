@@ -11,11 +11,20 @@ export function SectionHeader({
   description?: React.ReactNode
   align?: "left" | "center"
 }) {
+  const isCenter = align === "center"
   return (
-    <div className={align === "center" ? "text-center" : "text-left"}>
-      {eyebrow ? <div className="mb-4 inline-flex items-center gap-2">{eyebrow}</div> : null}
-      <h2 className="font-serif text-3xl font-bold tracking-tight sm:text-4xl mb-4 text-balance">{title}</h2>
-      {description ? <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{description}</p> : null}
+    <div className={isCenter ? "mx-auto max-w-2xl text-center" : "max-w-2xl text-left"}>
+      {eyebrow ? (
+        <div className={`mb-5 flex ${isCenter ? "justify-center" : "justify-start"}`}>
+          {typeof eyebrow === "string" ? <span className="eyebrow">{eyebrow}</span> : eyebrow}
+        </div>
+      ) : null}
+      <h2 className="font-serif text-3xl font-semibold leading-[1.1] tracking-tight text-balance sm:text-4xl lg:text-[2.75rem]">
+        {title}
+      </h2>
+      {description ? (
+        <p className={`mt-5 text-lg leading-relaxed text-muted-foreground ${isCenter ? "mx-auto" : ""}`}>{description}</p>
+      ) : null}
     </div>
   )
 }

@@ -1,10 +1,10 @@
 import Link from "next/link"
 import Image from "next/image"
+import { Check, X } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { packageCategories, type TourPackage } from "@/lib/data/packages"
-import { getPackageImageOverrides } from "@/src/lib/data/package-images"
 import { PackageItineraryAccordion } from "@/components/packages/package-itinerary-accordion"
 import { PackageGalleryLightbox } from "@/components/packages/package-gallery-lightbox"
 import { PackageInquiryCard } from "@/components/packages/package-inquiry-card"
@@ -54,21 +54,18 @@ const formatCurrency = (value?: number) => {
 
 const safeArray = <T,>(value?: T[]) => (Array.isArray(value) ? value.filter(Boolean) : [])
 
-export async function PackageDetails({ pkg }: { pkg: TourPackage }) {
+export function PackageDetails({ pkg }: { pkg: TourPackage }) {
   const categoryLabel = packageCategories.find((cat) => cat.slug === pkg.category)?.label ?? pkg.category
-  const overrides = await getPackageImageOverrides(pkg.category, pkg.slug)
-  const baseHero = pkg.heroImage || DEFAULT_HERO
-  const heroImage = overrides.mainImage || baseHero
-  const gallery = overrides.gallery?.length ? overrides.gallery : safeArray(pkg.gallery)
+  const heroImage = pkg.heroImage || DEFAULT_HERO
+  const gallery = safeArray(pkg.gallery)
   const galleryImages = gallery.length ? gallery : [heroImage]
-  const itineraryOverrides = overrides.itineraryImages || {}
-  const itineraryWithImages = safeArray(pkg.itinerary).map((item, index) => {
-    const dayNumber = item.day || index + 1
-    const overrideImage = itineraryOverrides[String(dayNumber)]
+  const itineraryWithImages = safeArray(pkg.itinerary).map((item) => {
     const existingImage = (item as { image?: string }).image
     return {
       ...item,
-      image: overrideImage || existingImage || heroImage,
+      // When absent, the itinerary component picks a content-relevant image itself
+      // (so each day differs).
+      image: existingImage || undefined,
     }
   })
 
@@ -97,38 +94,38 @@ export async function PackageDetails({ pkg }: { pkg: TourPackage }) {
     <div className="flex flex-col bg-background">
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <Image src={heroImage} alt={pkg.title} fill priority className="object-cover" sizes="100vw" />
+          <Image src={heroImage} alt={pkg.title} fill priority className="scale-105 object-cover" sizes="100vw" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-background" />
           <div className="absolute inset-0 hero-gradient" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-background" />
         </div>
-        <div className="relative z-10 container px-4 md:px-6 py-16 md:py-24 text-white">
-          <nav className="text-xs uppercase tracking-[0.2em] text-white/70">
+        <div className="relative z-10 container px-4 md:px-6 pt-28 pb-16 md:pt-36 md:pb-24 text-white">
+          <nav className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/60">
             <div className="flex flex-wrap items-center gap-2">
-              <Link href="/" className="hover:text-white">Home</Link>
+              <Link href="/" className="transition-colors hover:text-white">Home</Link>
               <span>/</span>
-              <Link href="/packages" className="hover:text-white">Packages</Link>
+              <Link href="/packages" className="transition-colors hover:text-white">Journeys</Link>
               <span>/</span>
-              <Link href={`/packages/${pkg.category}`} className="hover:text-white">{categoryLabel}</Link>
+              <Link href={`/packages/${pkg.category}`} className="transition-colors hover:text-white">{categoryLabel}</Link>
               <span>/</span>
-              <span className="text-white">{pkg.title}</span>
+              <span className="text-white/90">{pkg.title}</span>
             </div>
           </nav>
 
           <div className="mt-10 grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
             <div className="space-y-6">
-              <Badge variant="secondary" className="bg-white/15 text-white border-white/20">
-                {categoryLabel}
-              </Badge>
-              <h1 className="font-serif text-4xl md:text-6xl font-bold text-balance">{pkg.title}</h1>
-              <p className="text-lg md:text-xl text-white/90 text-balance">{pkg.summary || pkg.description}</p>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent" /> {categoryLabel}
+              </span>
+              <h1 className="font-serif text-4xl font-semibold leading-[1.05] text-balance md:text-6xl">{pkg.title}</h1>
+              <p className="max-w-xl text-lg text-white/85 text-balance md:text-xl">{pkg.summary || pkg.description}</p>
             </div>
             {quickFacts.length ? (
-              <div className="rounded-3xl border border-white/15 bg-white/10 p-6 backdrop-blur">
-                <p className="text-xs uppercase tracking-[0.3em] text-white/60">Journey Facts</p>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-3xl border border-white/15 bg-white/10 p-6 backdrop-blur-md">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-accent">Journey Facts</p>
+                <div className="mt-4 grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-2">
                   {quickFacts.map((fact) => (
-                    <div key={fact.label} className="rounded-2xl bg-white/10 px-4 py-3">
-                      <p className="text-xs uppercase tracking-[0.2em] text-white/60">{fact.label}</p>
+                    <div key={fact.label} className="bg-primary/40 px-4 py-3 backdrop-blur-sm">
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-white/55">{fact.label}</p>
                       <p className="mt-1 text-base font-semibold text-white">{fact.value}</p>
                     </div>
                   ))}
@@ -148,8 +145,8 @@ export async function PackageDetails({ pkg }: { pkg: TourPackage }) {
                 <CardContent className="p-6 md:p-8 space-y-4">
                   <div className="flex flex-wrap items-center justify-between gap-4">
                     <div>
-                      <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Journey Overview</p>
-                      <h2 className="font-serif text-2xl font-bold">Curated for immersive Bhutan travel</h2>
+                      <p className="eyebrow">Journey Overview</p>
+                      <h2 className="font-serif text-2xl font-semibold">Curated for immersive Bhutan travel</h2>
                     </div>
                     <Button variant="outline" size="sm" asChild>
                       <Link href="/inquiry">Request a quote</Link>
@@ -172,16 +169,16 @@ export async function PackageDetails({ pkg }: { pkg: TourPackage }) {
                 <Card className="card-premium border border-border/60 bg-card/90">
                   <CardContent className="p-6 md:p-8 space-y-5">
                     <div>
-                      <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Signature Moments</p>
-                      <h2 className="font-serif text-2xl font-bold">Highlights tailored to this journey</h2>
+                      <p className="eyebrow">Signature Moments</p>
+                      <h2 className="font-serif text-2xl font-semibold">Highlights tailored to this journey</h2>
                     </div>
                     <div className="grid gap-4 sm:grid-cols-2">
                       {highlightList.map((item, index) => (
-                        <div key={`${item}-${index}`} className="rounded-2xl border border-border/60 bg-background p-4">
-                          <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+                        <div key={`${item}-${index}`} className="flex items-start gap-3 rounded-2xl border border-border/60 bg-background p-4">
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-accent/25 bg-accent/10 font-serif text-sm font-semibold text-accent">
                             {index + 1}
                           </div>
-                          <p className="text-sm font-semibold text-foreground">{item}</p>
+                          <p className="pt-1.5 text-sm font-medium text-foreground">{item}</p>
                         </div>
                       ))}
                     </div>
@@ -193,8 +190,8 @@ export async function PackageDetails({ pkg }: { pkg: TourPackage }) {
                 <CardContent className="p-6 md:p-8 space-y-6">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Day by Day</p>
-                      <h2 className="font-serif text-2xl font-bold">Immersive itinerary flow</h2>
+                      <p className="eyebrow">Day by Day</p>
+                      <h2 className="font-serif text-2xl font-semibold">Immersive itinerary flow</h2>
                     </div>
                     {pkg.itinerary?.length ? (
                       <Button variant="outline" size="sm" asChild>
@@ -218,25 +215,25 @@ export async function PackageDetails({ pkg }: { pkg: TourPackage }) {
                 <CardContent className="p-6 md:p-8 space-y-6">
                   <div>
                     <div>
-                      <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">What's included</p>
-                      <h2 className="font-serif text-2xl font-bold">Inclusions</h2>
+                      <p className="eyebrow">What&rsquo;s included</p>
+                      <h2 className="font-serif text-2xl font-semibold">Inclusions</h2>
                     </div>
-                    <ul className="mt-4 grid gap-2 text-sm text-muted-foreground">
+                    <ul className="mt-4 grid gap-2.5 text-sm text-foreground/80 sm:grid-cols-2">
                       {(inclusions.length ? inclusions : DEFAULT_INCLUSIONS).map((item, index) => (
-                        <li key={`${item}-${index}`} className="flex gap-2">
-                          <span className="mt-1 size-2 rounded-full bg-primary" />
+                        <li key={`${item}-${index}`} className="flex items-start gap-2.5">
+                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-secondary" />
                           <span>{item}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                   {exclusions.length ? (
-                    <div>
-                      <h3 className="font-semibold">Exclusions</h3>
-                      <ul className="mt-3 grid gap-2 text-sm text-muted-foreground">
+                    <div className="border-t border-border/70 pt-6">
+                      <h3 className="font-semibold text-foreground">Not included</h3>
+                      <ul className="mt-3 grid gap-2.5 text-sm text-muted-foreground sm:grid-cols-2">
                         {exclusions.map((item, index) => (
-                          <li key={`${item}-${index}`} className="flex gap-2">
-                            <span className="mt-1 size-2 rounded-full bg-muted-foreground/40" />
+                          <li key={`${item}-${index}`} className="flex items-start gap-2.5">
+                            <X className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground/50" />
                             <span>{item}</span>
                           </li>
                         ))}
@@ -249,8 +246,8 @@ export async function PackageDetails({ pkg }: { pkg: TourPackage }) {
               <Card className="card-premium border border-border/60 bg-card/90">
                 <CardContent className="p-6 md:p-8 space-y-5">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Know before you go</p>
-                    <h2 className="font-serif text-2xl font-bold">FAQs</h2>
+                    <p className="eyebrow">Know before you go</p>
+                    <h2 className="font-serif text-2xl font-semibold">FAQs</h2>
                   </div>
                   <div className="grid gap-4 text-sm text-muted-foreground">
                     {faqList.map((faq, index) => (
@@ -266,8 +263,8 @@ export async function PackageDetails({ pkg }: { pkg: TourPackage }) {
               <Card className="card-premium border border-border/60 bg-card/90">
                 <CardContent className="p-6 md:p-8 space-y-4">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Visual story</p>
-                    <h2 className="font-serif text-2xl font-bold">Gallery</h2>
+                    <p className="eyebrow">Visual story</p>
+                    <h2 className="font-serif text-2xl font-semibold">Gallery</h2>
                   </div>
                   <PackageGalleryLightbox images={galleryImages} title={pkg.title} />
                 </CardContent>
@@ -276,7 +273,7 @@ export async function PackageDetails({ pkg }: { pkg: TourPackage }) {
 
             <div className="space-y-6">
               <div className="sticky top-24">
-                <PackageInquiryCard packageTitle={pkg.title} />
+                <PackageInquiryCard packageTitle={pkg.title} priceLabel={formatCurrency(pkg.startingFrom)} />
               </div>
             </div>
           </div>

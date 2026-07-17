@@ -26,13 +26,6 @@ export async function generateMetadata({
     description: pkg.summary,
     alternates: {
       canonical: `/packages/${pkg.category}/${pkg.slug}`,
-      languages: {
-        en: `/en/packages/${pkg.category}/${pkg.slug}`,
-        es: `/es/packages/${pkg.category}/${pkg.slug}`,
-        fr: `/fr/packages/${pkg.category}/${pkg.slug}`,
-        de: `/de/packages/${pkg.category}/${pkg.slug}`,
-        zh: `/zh/packages/${pkg.category}/${pkg.slug}`,
-      },
     },
     openGraph: {
       title: pkg.title,

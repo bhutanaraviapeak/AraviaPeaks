@@ -4,39 +4,43 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #f7f9fc;
-  --foreground: #111827;
-  --card: #ffffff;
-  --card-foreground: #111827;
-  --popover: #ffffff;
-  --popover-foreground: #111827;
-  --primary: #0f2a44;
-  --primary-foreground: #f7f9fc;
-  --secondary: #2e6f40;
-  --secondary-foreground: #f7f9fc;
-  --muted: #eef2f7;
-  --muted-foreground: #6b7280;
-  --accent: #c9a227;
-  --accent-foreground: #111827;
-  --destructive: #dc2626;
+  /* Warm ivory paper canvas — the signature of a curated travel house */
+  --background: #f6f2ea;
+  --foreground: #1c1a16;
+  --card: #fffdf9;
+  --card-foreground: #1c1a16;
+  --popover: #fffdf9;
+  --popover-foreground: #1c1a16;
+  /* Deep Himalayan midnight navy */
+  --primary: #122536;
+  --primary-foreground: #f6f2ea;
+  /* Deep pine — Bhutan's forested valleys */
+  --secondary: #1d5238;
+  --secondary-foreground: #f6f2ea;
+  --muted: #efe9de;
+  --muted-foreground: #6f6656;
+  /* Antique gilded gold — used sparingly */
+  --accent: #b08733;
+  --accent-foreground: #1c1a16;
+  --destructive: #b3261e;
   --destructive-foreground: #f9fafb;
-  --border: #e5e7eb;
-  --input: #e5e7eb;
-  --ring: #0f2a44;
-  --chart-1: #0f2a44;
-  --chart-2: #2e6f40;
-  --chart-3: #c9a227;
+  --border: #e5ddcf;
+  --input: #e5ddcf;
+  --ring: #b08733;
+  --chart-1: #122536;
+  --chart-2: #1d5238;
+  --chart-3: #b08733;
   --chart-4: #2563eb;
-  --chart-5: #f59e0b;
-  --radius: 0.75rem;
-  --sidebar: #f7f9fc;
-  --sidebar-foreground: #111827;
-  --sidebar-primary: #0f2a44;
-  --sidebar-primary-foreground: #f7f9fc;
-  --sidebar-accent: #eef2f7;
-  --sidebar-accent-foreground: #111827;
-  --sidebar-border: #e5e7eb;
-  --sidebar-ring: #0f2a44;
+  --chart-5: #d99b3a;
+  --radius: 0.625rem;
+  --sidebar: #f6f2ea;
+  --sidebar-foreground: #1c1a16;
+  --sidebar-primary: #122536;
+  --sidebar-primary-foreground: #f6f2ea;
+  --sidebar-accent: #efe9de;
+  --sidebar-accent-foreground: #1c1a16;
+  --sidebar-border: #e5ddcf;
+  --sidebar-ring: #b08733;
 }
 
 .dark {
@@ -75,7 +79,9 @@
 }
 
 @theme inline {
-  /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
+  /* Wire the loaded fonts so `font-serif` (Playfair) and `font-sans` (Inter) do real work */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -118,56 +124,95 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground antialiased;
-    background-image: radial-gradient(circle at top, rgba(30, 58, 138, 0.06), transparent 55%),
-      radial-gradient(circle at 20% 20%, rgba(31, 122, 99, 0.08), transparent 45%);
+    font-feature-settings: "ss01", "cv01", "kern";
+    text-rendering: optimizeLegibility;
+  }
+  /* Editorial serif headings: tighter tracking, richer scale contrast */
+  h1, h2, h3 {
+    @apply font-serif tracking-[-0.01em];
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--accent) 28%, transparent);
+    color: var(--foreground);
   }
 }
 
 @layer components {
-  .card-premium {
-    @apply bg-card border border-border/70 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  /* Refined eyebrow label used above section titles */
+  .eyebrow {
+    @apply inline-flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.28em] text-accent;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply h-px w-8 bg-accent/60;
   }
 
+  .card-premium {
+    @apply bg-card rounded-2xl border border-border/80 transition-all duration-500 ease-out hover:-translate-y-1.5;
+    box-shadow: 0 1px 2px rgba(28, 26, 22, 0.04), 0 12px 28px -14px rgba(28, 26, 22, 0.14);
+  }
+  .card-premium:hover {
+    box-shadow: 0 2px 4px rgba(28, 26, 22, 0.05), 0 26px 50px -20px rgba(18, 37, 54, 0.28);
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  }
+
+  /* Gilded primary CTA — restrained antique gold, no bounce */
   .btn-premium {
-    @apply shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02];
-    background-image: linear-gradient(135deg, #c9a227, #fbbf24);
-    color: #0f172a;
+    @apply relative overflow-hidden transition-all duration-300;
+    background-image: linear-gradient(135deg, #c79a3f 0%, #b08733 55%, #9a7327 100%);
+    color: #1c1a16;
+    box-shadow: 0 1px 2px rgba(28, 26, 22, 0.12), 0 10px 24px -12px rgba(176, 135, 51, 0.7);
+  }
+  .btn-premium:hover {
+    box-shadow: 0 2px 4px rgba(28, 26, 22, 0.12), 0 16px 34px -12px rgba(176, 135, 51, 0.85);
+    filter: brightness(1.04);
   }
 
   .overlay-dark {
-    @apply bg-gradient-to-t from-black/80 via-black/40 to-transparent;
+    @apply bg-gradient-to-t from-black/80 via-black/35 to-transparent;
   }
 
+  /* Cinematic hero wash — deep navy vignette, not a flat color block */
   .hero-gradient {
-    background-image: linear-gradient(135deg, rgba(15, 42, 68, 0.88), rgba(46, 111, 64, 0.78));
+    background-image: linear-gradient(180deg, rgba(18, 37, 54, 0.28) 0%, rgba(18, 37, 54, 0.12) 35%, rgba(18, 37, 54, 0.62) 100%),
+      linear-gradient(105deg, rgba(18, 37, 54, 0.55) 0%, rgba(18, 37, 54, 0) 60%);
   }
 
+  /* Subtle warm tint to alternate section rhythm */
   .section-tint {
-    background-image: linear-gradient(180deg, rgba(15, 42, 68, 0.08), rgba(46, 111, 64, 0.04));
+    background-color: color-mix(in srgb, var(--muted) 55%, var(--background));
   }
 
   .gold-glow {
-    box-shadow: 0 10px 30px rgba(201, 162, 39, 0.35);
+    box-shadow: 0 10px 30px -8px rgba(176, 135, 51, 0.4);
   }
 
   .hover-glow:hover {
-    box-shadow: 0 12px 30px rgba(15, 42, 68, 0.25);
+    box-shadow: 0 14px 34px -14px rgba(18, 37, 54, 0.35);
   }
 
   .text-gradient {
-    background-image: linear-gradient(135deg, #c9a227, #fbbf24);
+    background-image: linear-gradient(135deg, #d9b458, #b08733);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
+  /* Thin gilded divider */
+  .rule-gold {
+    height: 1px;
+    background-image: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 70%, transparent), transparent);
+  }
+
   .glass-card {
-    background: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    backdrop-filter: blur(14px);
+    background: rgba(255, 253, 249, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(16px) saturate(1.1);
   }
 }
 

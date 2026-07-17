@@ -1,4 +1,4 @@
-const DEFAULT_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".svg", ".gif"]
+   const DEFAULT_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".svg", ".gif"]
 export const DEFAULT_IMAGE_FALLBACK = "/images/placeholder.jpg"
 
 // Cache resolved paths to avoid repeated existence checks.

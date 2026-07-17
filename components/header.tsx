@@ -3,61 +3,54 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { LockIcon } from "@/components/icons"
+import { usePathname } from "next/navigation"
+import { Menu, X } from "lucide-react"
+
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/packages", label: "Journeys" },
+  { href: "/festivals", label: "Festivals" },
+  { href: "/travel-guide", label: "Travel Guide" },
+  { href: "/contact", label: "Contact" },
+]
 
 export function Header() {
-  const [adminState, setAdminState] = useState<"loading" | "guest" | "admin">("loading")
   const [isScrolled, setIsScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const pathname = usePathname()
+
+  // Transparent-over-hero only on the homepage; solid elsewhere.
+  const isHome = /^\/(en|es|fr|de|zh)?\/?$/.test(pathname || "/")
+  const transparent = isHome && !isScrolled && !menuOpen
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20)
+    const handleScroll = () => setIsScrolled(window.scrollY > 24)
     handleScroll()
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
   useEffect(() => {
-    let isMounted = true
-    const checkSession = async () => {
-      try {
-        const res = await fetch("/api/admin/session")
-        if (!isMounted) return
-
-        if (res.ok) {
-          const contentType = res.headers.get("content-type") || ""
-          if (!contentType.includes("application/json")) {
-            setAdminState("guest")
-            return
-          }
-
-          const data = (await res.json().catch(() => null)) as { authenticated?: boolean } | null
-          setAdminState(data?.authenticated ? "admin" : "guest")
-          return
-        }
-
-        setAdminState("guest")
-      } catch {
-        if (isMounted) setAdminState("guest")
-      }
-    }
-
-    checkSession()
+    document.body.style.overflow = menuOpen ? "hidden" : ""
     return () => {
-      isMounted = false
+      document.body.style.overflow = ""
     }
-  }, [])
+  }, [menuOpen])
 
   const handleLinkClick = () => {
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "instant" })
-    }, 0)
+    setMenuOpen(false)
+    setTimeout(() => window.scrollTo({ top: 0, behavior: "instant" }), 0)
   }
 
   return (
+    <>
     <header
-      className={`sticky top-0 z-50 w-full text-white transition-all duration-300 ${
-        isScrolled ? "bg-[#0f1f4b]/95 shadow-lg" : "bg-[#0f1f4b]"
-      } backdrop-blur-lg`}
+      className={`fixed top-0 z-50 w-full transition-all duration-500 ${
+        transparent
+          ? "bg-transparent"
+          : "border-b border-border/70 bg-background/85 shadow-[0_1px_0_rgba(28,26,22,0.04),0_10px_30px_-24px_rgba(28,26,22,0.4)] backdrop-blur-xl"
+      }`}
     >
       <a
         href="#main-content"
@@ -65,63 +58,95 @@ export function Header() {
       >
         Skip to content
       </a>
-      <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-        <Link
-          href="/"
-          className="flex items-center gap-3 transition-opacity hover:opacity-90"
-          onClick={handleLinkClick}
-        >
+
+      <div className={`container mx-auto flex items-center justify-between px-4 md:px-6 transition-all duration-500 ${transparent ? "h-24" : "h-[76px]"}`}>
+        {/* Brand */}
+        <Link href="/" className="flex items-center transition-opacity hover:opacity-90" onClick={handleLinkClick}>
           <Image
-            src="/images/logo.png"
-            alt="Bhutan Aravia Peaks"
-            width={180}
-            height={60}
-            className="h-12 w-auto object-contain"
+            src="/images/final-logo.png"
+            alt="Bhutan Aravia Peaks Tours and Travels"
+            width={478}
+            height={257}
+            className={`w-auto object-contain transition-all duration-500 ${
+              transparent ? "h-20 drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]" : "h-16"
+            }`}
             priority
           />
         </Link>
 
-        <div className="hidden items-center gap-3 md:flex">
+        {/* Desktop nav */}
+        <nav className="hidden items-center gap-9 lg:flex">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={handleLinkClick}
+              className={`group relative text-[13px] font-medium tracking-wide transition-colors ${
+                transparent ? "text-white/85 hover:text-white" : "text-foreground/75 hover:text-primary"
+              }`}
+            >
+              {link.label}
+              <span className="absolute -bottom-1.5 left-0 h-px w-0 bg-accent transition-all duration-300 group-hover:w-full" />
+            </Link>
+          ))}
+        </nav>
+
+        {/* Right actions */}
+        <div className="flex items-center gap-2.5">
           <Link
             href="/inquiry"
-            className="inline-flex items-center justify-center gap-2 rounded-md border border-white/20 px-5 py-2.5 text-sm font-semibold text-white/90 transition-colors hover:border-white/60 hover:text-white"
             onClick={handleLinkClick}
+            className="btn-premium hidden items-center justify-center rounded-full px-6 py-2.5 text-[13px] font-semibold tracking-wide sm:inline-flex"
           >
-            Book Custom Tour
+            Plan Your Journey
           </Link>
 
-          {adminState === "admin" ? (
-            <div className="flex items-center gap-2">
-              <Link
-                href="/admin/packages"
-                className="inline-flex items-center gap-2 rounded-md border border-white/20 px-4 py-2 text-sm font-semibold text-white/90 transition-colors hover:border-white/60 hover:text-white"
-                onClick={handleLinkClick}
-              >
-                <LockIcon className="text-base" /> Dashboard
-              </Link>
-              <button
-                type="button"
-                className="text-sm font-semibold text-white/70 transition-colors hover:text-white"
-                onClick={async () => {
-                  await fetch("/api/admin/logout", { method: "POST" })
-                  setAdminState("guest")
-                }}
-              >
-                Logout
-              </button>
-            </div>
-          ) : (
-            <Link
-              href="/admin/login"
-              className="inline-flex items-center gap-2 rounded-md border border-white/20 px-4 py-2 text-sm font-semibold text-white/90 transition-colors hover:border-white/60 hover:text-white"
-              onClick={handleLinkClick}
-            >
-              <LockIcon className="text-base" /> Admin
-            </Link>
-          )}
+          {/* Mobile menu toggle */}
+          <button
+            type="button"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+            className={`inline-flex h-11 w-11 items-center justify-center rounded-full border transition-colors lg:hidden ${
+              transparent ? "border-white/30 text-white" : "border-border text-primary"
+            }`}
+          >
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile drawer */}
+      <div
+        className={`lg:hidden fixed inset-0 top-[76px] z-40 origin-top bg-background/98 backdrop-blur-xl transition-all duration-300 ${
+          menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      >
+        <nav className="container mx-auto flex flex-col gap-1 px-4 py-6">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={handleLinkClick}
+              className="flex items-center justify-between border-b border-border/60 py-4 font-serif text-2xl text-foreground transition-colors hover:text-accent"
+            >
+              {link.label}
+              <span className="text-accent">&rarr;</span>
+            </Link>
+          ))}
+          <Link
+            href="/inquiry"
+            onClick={handleLinkClick}
+            className="btn-premium mt-6 inline-flex items-center justify-center rounded-full px-6 py-4 text-base font-semibold"
+          >
+            Plan Your Journey
+          </Link>
+        </nav>
+      </div>
     </header>
+    {/* Spacer so fixed header doesn't overlap content on non-home pages (home hero is full-bleed) */}
+    {!isHome && <div aria-hidden className="h-[76px]" />}
+    </>
   )
 }
 

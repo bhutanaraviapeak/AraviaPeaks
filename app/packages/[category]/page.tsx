@@ -1,10 +1,10 @@
 import type { Metadata } from "next"
+import Image from "next/image"
 import { notFound } from "next/navigation"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { PackageCard } from "@/components/packages/package-card"
 import { packages, packageCategories, type PackageCategory } from "@/lib/data/packages"
-import { fetchManifest } from "@/src/lib/data/package-images"
 
 type PackagesSearchParams = {
   [key: string]: string | string[] | undefined
@@ -49,13 +49,6 @@ export async function generateMetadata({
     description,
     alternates: {
       canonical: `/packages/${categorySlug}`,
-      languages: {
-        en: `/en/packages/${categorySlug}`,
-        es: `/es/packages/${categorySlug}`,
-        fr: `/fr/packages/${categorySlug}`,
-        de: `/de/packages/${categorySlug}`,
-        zh: `/zh/packages/${categorySlug}`,
-      },
     },
     openGraph: {
       title,
@@ -70,7 +63,6 @@ export default async function PackagesCategoryPage({
   params,
   searchParams,
 }: CategoryPageProps) {
-  const manifest = await fetchManifest()
   const { category } = await params
   const categorySlug = category as PackageCategory
   const categoryInfo = packageCategories.find((item) => item.slug === categorySlug)
@@ -111,16 +103,19 @@ export default async function PackagesCategoryPage({
       <main className="flex-1">
         <section className="relative py-16 md:py-24 overflow-hidden">
           <div className="absolute inset-0">
+            <Image src="/images/package-bg.webp" alt="" fill priority className="scale-105 object-cover" sizes="100vw" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-background" />
             <div className="absolute inset-0 hero-gradient" />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background" />
           </div>
           <div className="container px-4 md:px-6 relative z-10">
             <div className="mx-auto max-w-3xl text-center text-white">
-              <p className="text-sm uppercase tracking-[0.3em] text-white/70">{categoryInfo.label}</p>
-              <h1 className="font-serif text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl mb-6 text-balance">
+              <span className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/90 backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent" /> Journeys
+              </span>
+              <h1 className="mb-6 font-serif text-4xl font-semibold leading-[1.05] tracking-tight text-balance sm:text-5xl md:text-6xl">
                 {categoryInfo.label}
               </h1>
-              <p className="text-lg text-white/90 text-balance">
+              <p className="text-lg text-white/85 text-balance">
                 Browse curated {categoryInfo.label.toLowerCase()} with trusted local guides and seamless planning.
               </p>
             </div>
@@ -180,10 +175,9 @@ export default async function PackagesCategoryPage({
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredPackages.map((pkg) => {
-                const override = manifest.packages?.[`${pkg.category}/${pkg.slug}`]?.mainImage
-                return <PackageCard key={`${pkg.category}-${pkg.slug}`} pkg={pkg} imageOverride={override} />
-              })}
+              {filteredPackages.map((pkg) => (
+                <PackageCard key={`${pkg.category}-${pkg.slug}`} pkg={pkg} />
+              ))}
             </div>
           </div>
         </section>

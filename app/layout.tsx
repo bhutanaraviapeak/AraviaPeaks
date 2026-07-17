@@ -1,10 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { cookies } from "next/headers"
 import { Playfair_Display, Inter } from "next/font/google"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { NextIntlClientProvider } from "next-intl"
-import { defaultLocale, locales } from "@/i18n/config"
 import { LanguageProvider } from "@/lib/language-context"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { StickyCTA } from "@/components/sticky-cta"
@@ -33,18 +30,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://aravia-peaks.vercel.app"),
   alternates: {
     canonical: "/",
-    languages: {
-      en: "/en",
-      es: "/es",
-      fr: "/fr",
-      de: "/de",
-      zh: "/zh",
-    },
   },
   icons: {
-    icon: "/images/logo.png",
-    shortcut: "/images/logo.png",
-    apple: "/images/logo.png",
+    icon: "/images/final-logo.png",
+    shortcut: "/images/final-logo.png",
+    apple: "/images/final-logo.png",
   },
   openGraph: {
     title: "Bhutan Aravia Peaks Tours and Travels | Authentic Bhutan Experiences",
@@ -62,28 +52,21 @@ export const metadata: Metadata = {
   generator: "v0.app",
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const cookieStore = await cookies()
-  const localeCookie = cookieStore.get("NEXT_LOCALE")?.value
-  const locale = locales.includes(localeCookie as (typeof locales)[number]) ? localeCookie : defaultLocale
-  const messages = (await import(`../messages/${locale}.json`)).default
-
   return (
-    <html lang={locale} className={`${playfair.variable} ${inter.variable}`}>
+    <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <body className="font-sans antialiased">
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <LanguageProvider>
-            <ScrollToTop />
-            <div id="main-content">{children}</div>
-            <StickyCTA />
-            <WhatsAppFloat />
-          </LanguageProvider>
-          <SpeedInsights />
-        </NextIntlClientProvider>
+        <LanguageProvider>
+          <ScrollToTop />
+          <div id="main-content">{children}</div>
+          <StickyCTA />
+          <WhatsAppFloat />
+        </LanguageProvider>
+        <SpeedInsights />
 
       <script
         dangerouslySetInnerHTML={{

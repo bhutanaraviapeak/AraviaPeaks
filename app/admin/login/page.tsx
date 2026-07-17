@@ -6,7 +6,6 @@ import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
 import { LockIcon } from "@/components/icons"
 
 export default function AdminLoginPage() {
@@ -27,7 +26,7 @@ export default function AdminLoginPage() {
           if (!contentType.includes("application/json")) return
           const data = (await res.json().catch(() => null)) as { authenticated?: boolean } | null
           if (data?.authenticated) {
-            router.replace("/admin/packages")
+            router.replace("/admin")
           }
         }
       } catch {
@@ -62,7 +61,7 @@ export default function AdminLoginPage() {
         throw new Error("Invalid credentials")
       }
 
-      router.replace("/admin/packages")
+      router.replace("/admin")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed")
     } finally {
@@ -72,16 +71,16 @@ export default function AdminLoginPage() {
 
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-xl items-center justify-center">
-      <Card className="w-full">
+      <Card className="card-premium w-full border border-border/70 shadow-sm">
         <CardHeader className="space-y-2">
           <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/10 text-accent">
               <LockIcon className="h-4 w-4" />
             </span>
             Admin Console
           </div>
-          <CardTitle className="text-2xl">Sign in to manage images</CardTitle>
-          <CardDescription>Upload hero, gallery, and itinerary day photos for each package.</CardDescription>
+          <CardTitle className="font-serif text-2xl">Sign in to view submissions</CardTitle>
+          <CardDescription>Track every inquiry and contact message from the website.</CardDescription>
         </CardHeader>
         <CardContent>
           <form className="space-y-5" onSubmit={handleSubmit}>
@@ -109,9 +108,13 @@ export default function AdminLoginPage() {
               />
             </div>
             {error ? <p className="text-sm text-destructive">{error}</p> : null}
-            <Button type="submit" className="w-full" disabled={loading}>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-premium hover-glow flex h-12 w-full items-center justify-center rounded-lg text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-70"
+            >
               {loading ? "Signing in..." : "Sign in"}
-            </Button>
+            </button>
             <div className="text-center text-xs text-muted-foreground">
               <Link href="/" className="underline">
                 Return to site
