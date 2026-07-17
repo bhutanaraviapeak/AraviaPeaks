@@ -1,6 +1,6 @@
 "use client"
 
-import heroImage from "@/public/bhutan-himalayan-mountain-landscape-kingdom-thunde.jpg"
+import heroImage from "@/public/images/hero-poster.jpg"
 import Link from "next/link"
 import { ShieldCheck, Clock, Sparkles, ArrowRight } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
