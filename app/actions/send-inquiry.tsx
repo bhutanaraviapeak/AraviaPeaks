@@ -1,7 +1,7 @@
 "use server"
 
-import nodemailer from "nodemailer"
 import { headers } from "next/headers"
+import { sendEmail } from "@/lib/mailer"
 import { createSubmission, countRecentSubmissionsByIp } from "@/lib/db/submissions"
 
 type InquiryData = {
@@ -33,22 +33,6 @@ function generateReferenceNumber(): string {
   const timestamp = Date.now().toString().slice(-6)
   const random = Math.random().toString(36).substring(2, 5).toUpperCase()
   return `BAP${timestamp}${random}`
-}
-
-function getTransporter() {
-  const gmailEmail = process.env.GMAIL_EMAIL
-  const gmailAppPassword = process.env.GMAIL_APP_PASSWORD
-
-  if (!gmailEmail || !gmailAppPassword) {
-    throw new Error(
-      "Email is not configured. Set GMAIL_EMAIL and GMAIL_APP_PASSWORD in your environment (see GMAIL_SETUP_GUIDE.md).",
-    )
-  }
-
-  return nodemailer.createTransport({
-    service: "gmail",
-    auth: { user: gmailEmail, pass: gmailAppPassword },
-  })
 }
 
 function buildAdminHtml(data: InquiryData, referenceNumber: string) {
@@ -195,7 +179,6 @@ export async function sendInquiryEmail(rawData: InquiryData) {
       }
     }
 
-    const transporter = getTransporter()
     const referenceNumber = generateReferenceNumber()
 
     try {
@@ -205,8 +188,7 @@ export async function sendInquiryEmail(rawData: InquiryData) {
       console.error("[inquiry] Failed to log submission to MongoDB:", dbError)
     }
 
-    await transporter.sendMail({
-      from: `"Bhutan Aravia Peaks" <${process.env.GMAIL_EMAIL}>`,
+    await sendEmail({
       to: BUSINESS_EMAIL,
       replyTo: data.email,
       subject: `New Travel Inquiry from ${data.fullName} - Ref: ${referenceNumber}`,
@@ -214,8 +196,7 @@ export async function sendInquiryEmail(rawData: InquiryData) {
     })
 
     try {
-      await transporter.sendMail({
-        from: `"Bhutan Aravia Peaks" <${process.env.GMAIL_EMAIL}>`,
+      await sendEmail({
         to: data.email,
         subject: `Thank You for Your Inquiry - Ref: ${referenceNumber}`,
         html: buildCustomerHtml(data.fullName, referenceNumber),

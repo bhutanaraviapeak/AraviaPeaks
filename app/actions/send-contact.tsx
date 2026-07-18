@@ -1,7 +1,7 @@
 "use server"
 
-import nodemailer from "nodemailer"
 import { headers } from "next/headers"
+import { sendEmail } from "@/lib/mailer"
 import { createSubmission, countRecentSubmissionsByIp } from "@/lib/db/submissions"
 
 type ContactData = {
@@ -29,22 +29,6 @@ function generateReferenceNumber(): string {
   const timestamp = Date.now().toString().slice(-6)
   const random = Math.random().toString(36).substring(2, 5).toUpperCase()
   return `BAP${timestamp}${random}`
-}
-
-function getTransporter() {
-  const gmailEmail = process.env.GMAIL_EMAIL
-  const gmailAppPassword = process.env.GMAIL_APP_PASSWORD
-
-  if (!gmailEmail || !gmailAppPassword) {
-    throw new Error(
-      "Email is not configured. Set GMAIL_EMAIL and GMAIL_APP_PASSWORD in your environment (see GMAIL_SETUP_GUIDE.md).",
-    )
-  }
-
-  return nodemailer.createTransport({
-    service: "gmail",
-    auth: { user: gmailEmail, pass: gmailAppPassword },
-  })
 }
 
 function buildAdminHtml(data: ContactData, referenceNumber: string) {
@@ -175,7 +159,6 @@ export async function sendContactEmail(rawData: ContactData) {
       }
     }
 
-    const transporter = getTransporter()
     const referenceNumber = generateReferenceNumber()
 
     try {
@@ -185,8 +168,7 @@ export async function sendContactEmail(rawData: ContactData) {
       console.error("[contact] Failed to log submission to MongoDB:", dbError)
     }
 
-    await transporter.sendMail({
-      from: `"Bhutan Aravia Peaks" <${process.env.GMAIL_EMAIL}>`,
+    await sendEmail({
       to: BUSINESS_EMAIL,
       replyTo: data.email,
       subject: `New Contact from ${data.fullName} - Ref: ${referenceNumber}`,
@@ -194,8 +176,7 @@ export async function sendContactEmail(rawData: ContactData) {
     })
 
     try {
-      await transporter.sendMail({
-        from: `"Bhutan Aravia Peaks" <${process.env.GMAIL_EMAIL}>`,
+      await sendEmail({
         to: data.email,
         subject: `Thank You for Contacting Bhutan Aravia Peaks - Ref: ${referenceNumber}`,
         html: buildCustomerHtml(data.fullName, referenceNumber),
