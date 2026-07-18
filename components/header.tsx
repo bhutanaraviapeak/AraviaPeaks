@@ -115,35 +115,51 @@ export function Header() {
           </button>
         </div>
       </div>
-
-      {/* Mobile drawer */}
-      <div
-        className={`lg:hidden fixed inset-0 top-[76px] z-40 origin-top bg-background/98 backdrop-blur-xl transition-all duration-300 ${
-          menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
-        }`}
-      >
-        <nav className="container mx-auto flex flex-col gap-1 px-4 py-6">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={handleLinkClick}
-              className="flex items-center justify-between border-b border-border/60 py-4 font-serif text-2xl text-foreground transition-colors hover:text-accent"
-            >
-              {link.label}
-              <span className="text-accent">&rarr;</span>
-            </Link>
-          ))}
-          <Link
-            href="/inquiry"
-            onClick={handleLinkClick}
-            className="btn-premium mt-6 inline-flex items-center justify-center rounded-full px-6 py-4 text-base font-semibold"
-          >
-            Plan Your Journey
-          </Link>
-        </nav>
-      </div>
     </header>
+
+    {/* Mobile drawer — kept OUTSIDE <header> deliberately: the header's backdrop-blur-xl
+        (backdrop-filter) establishes a new containing block for position:fixed descendants,
+        which would confine this overlay to the header's own ~76px box instead of the viewport. */}
+    <div
+      className="lg:hidden"
+      style={{
+        position: "fixed",
+        top: "76px",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 40,
+        backgroundColor: "rgba(246, 242, 234, 0.98)",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
+        opacity: menuOpen ? 1 : 0,
+        pointerEvents: menuOpen ? "auto" : "none",
+        transition: "opacity 300ms",
+        overflowY: "auto",
+      }}
+    >
+      <nav className="container mx-auto flex flex-col gap-1 px-4 py-6">
+        {navLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            onClick={handleLinkClick}
+            className="flex items-center justify-between border-b border-border/60 py-4 font-serif text-2xl text-foreground transition-colors hover:text-accent"
+          >
+            {link.label}
+            <span className="text-accent">&rarr;</span>
+          </Link>
+        ))}
+        <Link
+          href="/inquiry"
+          onClick={handleLinkClick}
+          className="btn-premium mt-6 inline-flex items-center justify-center rounded-full px-6 py-4 text-base font-semibold"
+        >
+          Plan Your Journey
+        </Link>
+      </nav>
+    </div>
+
     {/* Spacer so fixed header doesn't overlap content on non-home pages (home hero is full-bleed) */}
     {!isHome && <div aria-hidden className="h-[76px]" />}
     </>
