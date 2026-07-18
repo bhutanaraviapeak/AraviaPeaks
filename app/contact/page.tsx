@@ -86,14 +86,17 @@ export default function ContactPage() {
     setContactForm((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleContactSubmit = async (e: React.FormEvent) => {
+  const handleContactSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitError("")
     setSubmitSuccess(false)
 
+    // Honeypot is an uncontrolled input (bots fill the DOM, not React state) — read it at submit time.
+    const website = String(new FormData(e.currentTarget).get("website") ?? "")
+
     try {
-      const result = await sendContactEmail(contactForm)
+      const result = await sendContactEmail({ ...contactForm, website })
 
       if (result.success) {
         setSubmitSuccess(true)
@@ -202,6 +205,11 @@ export default function ContactPage() {
                   </div>
 
                   <form onSubmit={handleContactSubmit} className="space-y-6">
+                    {/* Honeypot — invisible to humans, bots auto-fill it. Server discards any submission where it's set. */}
+                    <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", height: 0, overflow: "hidden" }}>
+                      <label htmlFor="website">Website</label>
+                      <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+                    </div>
                     {submitSuccess && contactReferenceNumber && (
                       <div
                         role="status"

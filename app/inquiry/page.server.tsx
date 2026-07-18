@@ -135,6 +135,11 @@ export default async function InquiryPage({
                     )}
 
                     <form action="/api/inquiry" method="post" className="space-y-10" noValidate>
+                      {/* Honeypot — invisible to humans, bots auto-fill it. Server discards any submission where it's set. */}
+                      <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", height: 0, overflow: "hidden" }}>
+                        <label htmlFor="website">Website</label>
+                        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+                      </div>
                       <div className="space-y-6">
                         <h3 className="eyebrow">Personal Information</h3>
                         <div className="grid gap-6 md:grid-cols-2">

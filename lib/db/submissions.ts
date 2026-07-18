@@ -19,6 +19,8 @@ export type Submission = {
   referenceNumber: string
   status: SubmissionStatus
   createdAt: Date
+  // Stored for anti-abuse rate limiting only; not shown in the dashboard.
+  ip?: string
 }
 
 const COLLECTION = "submissions"
@@ -38,6 +40,12 @@ export async function createSubmission(
 export async function listSubmissions(): Promise<Submission[]> {
   const db = await getDb()
   return db.collection<Submission>(COLLECTION).find().sort({ createdAt: -1 }).limit(200).toArray()
+}
+
+export async function countRecentSubmissionsByIp(ip: string, windowMs: number): Promise<number> {
+  const db = await getDb()
+  const since = new Date(Date.now() - windowMs)
+  return db.collection<Submission>(COLLECTION).countDocuments({ ip, createdAt: { $gte: since } })
 }
 
 export async function updateSubmissionStatus(id: string, status: SubmissionStatus): Promise<boolean> {

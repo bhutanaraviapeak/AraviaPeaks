@@ -11,6 +11,7 @@ type InquiryData = {
   groupSize: string
   duration: string
   message: string
+  website?: string
 }
 
 const requiredFields: Array<keyof InquiryData> = [
@@ -38,6 +39,7 @@ export async function POST(request: Request) {
     groupSize: getStringValue(formData.get("groupSize")),
     duration: getStringValue(formData.get("duration")),
     message: getStringValue(formData.get("message")),
+    website: getStringValue(formData.get("website")),
   }
 
   const errorFields = requiredFields.filter((field) => !data[field])

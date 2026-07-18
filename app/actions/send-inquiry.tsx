@@ -1,7 +1,8 @@
 "use server"
 
 import nodemailer from "nodemailer"
-import { createSubmission } from "@/lib/db/submissions"
+import { headers } from "next/headers"
+import { createSubmission, countRecentSubmissionsByIp } from "@/lib/db/submissions"
 
 type InquiryData = {
   fullName: string
@@ -13,6 +14,17 @@ type InquiryData = {
   groupSize: string
   duration: string
   message: string
+  // Honeypot field — hidden from humans; only bots fill it.
+  website?: string
+}
+
+const RATE_LIMIT_MAX = 5
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000
+
+async function getClientIp(): Promise<string> {
+  const hdrs = await headers()
+  const forwarded = hdrs.get("x-forwarded-for") ?? ""
+  return forwarded.split(",")[0].trim() || hdrs.get("x-real-ip") || "unknown"
 }
 
 const BUSINESS_EMAIL = "bhutanaraviapeak@gmail.com"
@@ -158,13 +170,36 @@ function buildCustomerHtml(fullName: string, referenceNumber: string) {
   `
 }
 
-export async function sendInquiryEmail(data: InquiryData) {
+export async function sendInquiryEmail(rawData: InquiryData) {
   try {
+    // Honeypot: a hidden field humans never see. If it's filled, this is a bot —
+    // return a fake success so it doesn't learn to adapt, and store/send nothing.
+    const { website, ...data } = rawData
+    if (website) {
+      return { success: true, message: "Inquiry sent successfully", referenceNumber: generateReferenceNumber() }
+    }
+
+    const ip = await getClientIp()
+    if (ip !== "unknown") {
+      try {
+        const recent = await countRecentSubmissionsByIp(ip, RATE_LIMIT_WINDOW_MS)
+        if (recent >= RATE_LIMIT_MAX) {
+          return {
+            success: false,
+            message: "Too many submissions from your connection. Please try again in an hour, or reach us on WhatsApp.",
+          }
+        }
+      } catch (rateLimitError) {
+        // If the check itself fails, let the submission through rather than block a real customer.
+        console.error("[inquiry] Rate limit check failed:", rateLimitError)
+      }
+    }
+
     const transporter = getTransporter()
     const referenceNumber = generateReferenceNumber()
 
     try {
-      await createSubmission({ type: "inquiry", referenceNumber, ...data })
+      await createSubmission({ type: "inquiry", referenceNumber, ip, ...data })
     } catch (dbError) {
       // The dashboard log is best-effort; it should never block the email flow.
       console.error("[inquiry] Failed to log submission to MongoDB:", dbError)
