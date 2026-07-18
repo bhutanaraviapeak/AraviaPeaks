@@ -3,7 +3,7 @@ import nodemailer from "nodemailer"
 const FROM_NAME = "Bhutan Aravia Peaks"
 // Resend sends from the verified bhutanaraviapeaks.com domain (SPF/DKIM authenticated),
 // which keeps mail out of spam folders and avoids Gmail's daily sending cap.
-const RESEND_FROM = "hello@bhutanaraviapeaks.com"
+const RESEND_FROM = "info@bhutanaraviapeaks.com"
 
 export type SendEmailInput = {
   to: string
