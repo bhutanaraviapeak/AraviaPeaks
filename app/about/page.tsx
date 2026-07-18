@@ -27,7 +27,7 @@ export default function AboutPage() {
     "@context": "https://schema.org",
     "@type": "TravelAgency",
     name: "Bhutan Aravia Peaks",
-    url: "https://aravia-peaks.vercel.app/about",
+    url: "https://www.bhutanaraviapeaks.com/about",
     description: t("about_intro"),
     areaServed: "Bhutan",
   }

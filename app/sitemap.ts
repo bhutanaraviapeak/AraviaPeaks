@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next"
 import { packages, packageCategories } from "@/lib/data/packages"
 
-const baseUrl = "https://aravia-peaks.vercel.app"
+const baseUrl = "https://www.bhutanaraviapeaks.com"
 
 const staticRoutes = [
   "/",

@@ -68,7 +68,7 @@ export default async function PackagePage({
     provider: {
       "@type": "TravelAgency",
       name: "Bhutan Aravia Peaks",
-      url: "https://aravia-peaks.vercel.app",
+      url: "https://www.bhutanaraviapeaks.com",
     },
   }
 

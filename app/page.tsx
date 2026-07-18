@@ -15,7 +15,7 @@ export default function Home() {
     "@context": "https://schema.org",
     "@type": "TravelAgency",
     name: "Bhutan Aravia Peaks",
-    url: "https://aravia-peaks.vercel.app",
+    url: "https://www.bhutanaraviapeaks.com",
     description:
       "Locally owned Bhutan travel specialists offering custom cultural tours, treks, and festival journeys.",
     areaServed: "Bhutan",

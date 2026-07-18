@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Playfair_Display, Inter } from "next/font/google"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/next"
 import { LanguageProvider } from "@/lib/language-context"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { StickyCTA } from "@/components/sticky-cta"
@@ -27,14 +28,14 @@ export const metadata: Metadata = {
     "Discover the magic of Bhutan with Bhutan Aravia Peaks Tours and Travels, your locally-owned gateway to authentic cultural festivals, Himalayan treks, and transformative journeys in the Land of the Thunder Dragon.",
   keywords:
     "Bhutan tours, Bhutan travel, cultural festivals, Paro Tshechu, Thimphu festival, Bhutan packages, trekking Bhutan, authentic Bhutan, luxury Bhutan, Bhutan Aravia Peaks",
-  metadataBase: new URL("https://aravia-peaks.vercel.app"),
+  metadataBase: new URL("https://www.bhutanaraviapeaks.com"),
   alternates: {
     canonical: "/",
   },
   icons: {
-    icon: "/images/final-logo.png",
-    shortcut: "/images/final-logo.png",
-    apple: "/images/final-logo.png",
+    icon: "/images/favicon.png",
+    shortcut: "/images/favicon.png",
+    apple: "/images/favicon.png",
   },
   openGraph: {
     title: "Bhutan Aravia Peaks Tours and Travels | Authentic Bhutan Experiences",
@@ -49,7 +50,6 @@ export const metadata: Metadata = {
     description:
       "Discover the magic of Bhutan with Bhutan Aravia Peaks Tours and Travels, your locally-owned gateway to authentic cultural festivals, Himalayan treks, and transformative journeys in the Land of the Thunder Dragon.",
   },
-  generator: "v0.app",
 }
 
 export default function RootLayout({
@@ -67,32 +67,7 @@ export default function RootLayout({
           <WhatsAppFloat />
         </LanguageProvider>
         <SpeedInsights />
-
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-      window.addEventListener('load', () => {
-        // remove v0 "Built with" links
-        document
-          .querySelectorAll('a[href*="v0.app"]')
-          .forEach(el => el.remove());
-
-        // remove any v0 iframe/widget
-        document
-          .querySelectorAll('iframe[src*="v0.app"], div[data-v0], div[class*="v0"]')
-          .forEach(el => el.remove());
-
-        // remove any floating close (X) button
-        document.querySelectorAll('div').forEach(el => {
-          const style = window.getComputedStyle(el);
-          if (style.position === 'fixed' && Number(style.zIndex) > 999) {
-            el.remove();
-          }
-        });
-      });
-    `,
-        }}
-      />
+        <Analytics />
       </body>
     </html>
   )
