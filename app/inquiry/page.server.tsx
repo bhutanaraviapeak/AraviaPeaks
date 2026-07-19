@@ -430,7 +430,7 @@ export default async function InquiryPage({
                     <div className="space-y-1">
                       <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Email</p>
                       <p className="text-base font-semibold text-foreground break-all">
-                        bhutanaraviapeak@gmail.com
+                        info@bhutanaraviapeaks.com
                       </p>
                     </div>
                     <div className="rule-gold" />

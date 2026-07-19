@@ -22,7 +22,7 @@ export default function Home() {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "Customer Service",
-      email: "bhutanaraviapeak@gmail.com",
+      email: "info@bhutanaraviapeaks.com",
       telephone: "+975 17565604",
     },
   }

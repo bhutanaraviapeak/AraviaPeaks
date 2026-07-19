@@ -105,8 +105,8 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="mailto:bhutanaraviapeak@gmail.com" className="hover:text-white transition-colors">
-                  bhutanaraviapeak@gmail.com
+                <a href="mailto:info@bhutanaraviapeaks.com" className="hover:text-white transition-colors">
+                  info@bhutanaraviapeaks.com
                 </a>
               </li>
             </ul>

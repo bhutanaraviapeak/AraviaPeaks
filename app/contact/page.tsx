@@ -155,7 +155,7 @@ export default function ContactPage() {
                   </div>
                   <h3 className="font-serif text-xl font-semibold mb-2">{t("contact_email_us")}</h3>
                   <p className="text-sm text-muted-foreground mb-4">{t("contact_email_description")}</p>
-                  <p className="text-foreground font-semibold">bhutanaraviapeak@gmail.com</p>
+                  <p className="text-foreground font-semibold">info@bhutanaraviapeaks.com</p>
                 </CardContent>
               </Card>
 

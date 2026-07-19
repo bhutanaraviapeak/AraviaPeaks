@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 
 const WHATSAPP_NUMBER = "+97517565604"
-const EMAIL_ADDRESS = "bhutanaraviapeak@gmail.com"
+const EMAIL_ADDRESS = "info@bhutanaraviapeaks.com"
 
 const trustPoints = ["Licensed local guides", "Flexible dates & custom routes", "24-hour response guarantee"]
 

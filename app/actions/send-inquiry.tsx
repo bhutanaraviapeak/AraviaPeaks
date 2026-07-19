@@ -27,7 +27,10 @@ async function getClientIp(): Promise<string> {
   return forwarded.split(",")[0].trim() || hdrs.get("x-real-ip") || "unknown"
 }
 
+// Where admin notifications actually land — the real inbox behind info@'s forwarding rule.
 const BUSINESS_EMAIL = "bhutanaraviapeak@gmail.com"
+// What customers see in email footers — the professional domain address.
+const DISPLAY_EMAIL = "info@bhutanaraviapeaks.com"
 
 function generateReferenceNumber(): string {
   const timestamp = Date.now().toString().slice(-6)
@@ -146,7 +149,7 @@ function buildCustomerHtml(fullName: string, referenceNumber: string) {
           </div>
           <div class="footer">
             <p><strong>Bhutan Aravia Peaks</strong></p>
-            <p>Email: ${BUSINESS_EMAIL}</p>
+            <p>Email: ${DISPLAY_EMAIL}</p>
           </div>
         </div>
       </body>
