@@ -6,6 +6,12 @@ export const metadata: Metadata = {
   title: "Admin Dashboard | Bhutan Aravia Peaks",
 }
 
+// This page reads live submissions on every request and must never be
+// statically prerendered — build-time prerendering would try to connect to
+// MongoDB during the build itself, and a transient DB/network hiccup at
+// build time could fail the entire deployment.
+export const dynamic = "force-dynamic"
+
 export default async function AdminDashboardPage() {
   let submissions: SubmissionView[] = []
   let loadError: string | null = null
