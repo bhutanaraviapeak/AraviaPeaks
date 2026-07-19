@@ -7,7 +7,7 @@ import { WhyUs } from "@/components/sections/why-us"
 import { AboutAravia } from "@/components/sections/about-aravia"
 import { BhutanMap } from "@/components/sections/bhutan-map"
 import { FestivalSeason } from "@/components/sections/festival-season"
-import { Testimonials } from "@/components/sections/testimonials"
+import { WhyChooseUs } from "@/components/sections/why-choose-us"
 import { StrongCTA } from "@/components/sections/strong-cta"
 
 export default function Home() {
@@ -41,7 +41,7 @@ export default function Home() {
         <AboutAravia />
         <BhutanMap />
         <FestivalSeason />
-        <Testimonials />
+        <WhyChooseUs />
         <StrongCTA />
       </main>
 

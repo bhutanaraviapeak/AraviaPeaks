@@ -15,10 +15,10 @@ const pillars = [
 ] as const
 
 const stats = [
-  { value: "15+", label: "Years guiding Bhutan" },
-  { value: "1,200+", label: "Journeys crafted" },
   { value: "100%", label: "Bhutanese-owned team" },
-  { value: "4.9/5", label: "Traveler rating" },
+  { value: "Licensed", label: "Tour operator" },
+  { value: "24h", label: "Response time" },
+  { value: "1:1", label: "Personal itinerary design" },
 ]
 
 export default function AboutPage() {

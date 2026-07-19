@@ -12,9 +12,9 @@ const trustChips = [
 ]
 
 const stats = [
-  { value: "15+", label: "Years guiding Bhutan" },
-  { value: "1,200+", label: "Journeys crafted" },
-  { value: "4.9/5", label: "Traveler rating" },
+  { value: "100%", label: "Bhutanese-owned & operated" },
+  { value: "24h", label: "Inquiry response time" },
+  { value: "1:1", label: "Personal itinerary design" },
 ]
 
 export function HomeHero() {

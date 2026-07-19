@@ -1,11 +1,11 @@
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight, Award, Users, CalendarClock } from "lucide-react"
+import { ArrowRight, Award, Users, Clock } from "lucide-react"
 
 const credentials = [
   { icon: Award, value: "Licensed", label: "Bhutan tour operator" },
-  { icon: CalendarClock, value: "15+ yrs", label: "Crafting journeys" },
-  { icon: Users, value: "1,200+", label: "Guests hosted" },
+  { icon: Users, value: "100%", label: "Bhutanese-owned team" },
+  { icon: Clock, value: "24h", label: "Response guarantee" },
 ]
 
 export function AboutAravia() {
@@ -26,8 +26,10 @@ export function AboutAravia() {
             </div>
             {/* Floating credential card */}
             <div className="absolute -bottom-6 -right-2 hidden max-w-[15rem] rounded-2xl border border-border/70 bg-card/95 p-5 shadow-[0_24px_50px_-24px_rgba(18,37,54,0.5)] backdrop-blur sm:block">
-              <p className="font-serif text-3xl font-semibold text-primary">4.9<span className="text-accent">★</span></p>
-              <p className="mt-1 text-sm text-muted-foreground">Average rating across 300+ traveler reviews.</p>
+              <p className="font-serif text-2xl font-semibold text-primary">Founder-led</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                You work directly with the people who plan every journey — not a call center.
+              </p>
             </div>
           </div>
 
