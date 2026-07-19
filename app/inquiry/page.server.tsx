@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { getPackageBySlug } from "@/lib/data/packages"
 import {
   User,
   Mail,
@@ -19,7 +20,23 @@ import {
   ArrowRight,
   Sparkles,
   ShieldCheck,
+  MapPin,
+  CalendarClock,
 } from "lucide-react"
+
+const CUSTOMIZATION_OPTIONS = [
+  { value: "add-days", label: "Add extra days" },
+  { value: "reduce-days", label: "Reduce the duration" },
+  { value: "add-destination", label: "Add another destination" },
+  { value: "remove-destination", label: "Remove a destination" },
+  { value: "upgrade-accommodation", label: "Upgrade accommodation" },
+  { value: "include-festival", label: "Include a festival" },
+  { value: "add-trekking", label: "Add trekking or hiking" },
+  { value: "add-wellness", label: "Add wellness or spa experience" },
+  { value: "include-homestay", label: "Include a homestay" },
+  { value: "special-celebration", label: "Add a special celebration" },
+  { value: "other", label: "Other request" },
+]
 
 type InquirySearchParams = {
   [key: string]: string | string[] | undefined
@@ -66,13 +83,22 @@ export default async function InquiryPage({
   const errorMessage = getStringValue(params.errorMessage)
   const errorFields = new Set(getStringValue(params.errorFields).split(",").filter(Boolean))
 
+  // The slug is the only package identifier we trust — it's looked up server-side
+  // here (and re-verified again in the API route on submit) rather than trusting
+  // the "name"/"category"/"duration" URL text, which a visitor could hand-edit.
+  const packageSlug = getStringValue(params.package)
+  const pkg = packageSlug ? getPackageBySlug(packageSlug) : undefined
+  const isPackageMode = Boolean(pkg)
+
   const packageName = getStringValue(params.name)
   const packageCategory = getStringValue(params.category)
   const packageDuration = getStringValue(params.duration)
 
-  const prefillPackageType = mapPackageType(packageCategory)
-  const prefillDuration = mapDuration(packageDuration)
-  const prefillMessage = packageName ? `I am interested in the ${packageName} package.` : ""
+  const prefillPackageType = pkg ? pkg.category : mapPackageType(packageCategory)
+  const prefillDuration = pkg ? mapDuration(pkg.durationLabel) : mapDuration(packageDuration)
+  const prefillMessage = !pkg && packageName ? `I am interested in the ${packageName} package.` : ""
+
+  const selectedChangeTypes = new Set(getStringValue(params.changeTypes).split(",").filter(Boolean))
 
   const values = {
     fullName: getStringValue(params.fullName),
@@ -93,14 +119,79 @@ export default async function InquiryPage({
       <main className="flex-1 bg-gradient-to-b from-background to-muted/30 pt-28 pb-20 md:pt-32">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="mx-auto mb-14 max-w-2xl text-center">
-            <span className="eyebrow justify-center">Plan Your Journey</span>
-            <h1 className="mt-5 font-serif text-4xl font-semibold leading-tight tracking-tight text-balance sm:text-5xl">
-              Request a quote for your <span className="text-gradient">Bhutan adventure</span>
-            </h1>
-            <p className="mt-5 text-lg leading-relaxed text-muted-foreground text-balance">
-              Tell us your travel goals and we will craft a tailored itinerary within 24 hours.
-            </p>
+            {isPackageMode && pkg ? (
+              <>
+                <span className="eyebrow justify-center">Customize Your Journey</span>
+                <h1 className="mt-5 font-serif text-4xl font-semibold leading-tight tracking-tight text-balance sm:text-5xl">
+                  Customize your <span className="text-gradient">{pkg.title}</span> journey
+                </h1>
+                <p className="mt-5 text-lg leading-relaxed text-muted-foreground text-balance">
+                  You&rsquo;ve selected this itinerary as your starting point. Tell us what you&rsquo;d like to add,
+                  remove, upgrade, or change.
+                </p>
+              </>
+            ) : (
+              <>
+                <span className="eyebrow justify-center">Plan Your Journey</span>
+                <h1 className="mt-5 font-serif text-4xl font-semibold leading-tight tracking-tight text-balance sm:text-5xl">
+                  Design your <span className="text-gradient">Bhutan adventure</span>
+                </h1>
+                <p className="mt-5 text-lg leading-relaxed text-muted-foreground text-balance">
+                  Share your interests, travel style, and preferred experiences — we will craft a tailored itinerary
+                  within 24 hours.
+                </p>
+              </>
+            )}
           </div>
+
+          {isPackageMode && pkg && (
+            <div className="mx-auto mb-8 max-w-6xl">
+              <div className="card-premium border border-border/70 p-6 md:p-8">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <p className="eyebrow">Your Starting Itinerary</p>
+                    <h2 className="mt-3 font-serif text-2xl font-semibold text-foreground">{pkg.title}</h2>
+                    <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground">
+                      <span className="inline-flex items-center gap-1.5">
+                        <MapPin className="h-4 w-4 text-accent" aria-hidden="true" /> {pkg.region}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Clock3 className="h-4 w-4 text-accent" aria-hidden="true" /> {pkg.durationLabel}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <CalendarClock className="h-4 w-4 text-accent" aria-hidden="true" /> {pkg.bestTime}
+                      </span>
+                    </div>
+                  </div>
+                  {pkg.highlights.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {pkg.highlights.map((highlight) => (
+                        <span
+                          key={highlight}
+                          className="rounded-full border border-accent/30 bg-accent/5 px-3 py-1 text-xs font-medium text-accent"
+                        >
+                          {highlight}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {pkg.itinerary.length > 0 && (
+                  <div className="mt-6 grid gap-2 border-t border-border/60 pt-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {pkg.itinerary.map((item) => (
+                      <div key={item.day} className="flex items-start gap-2.5 text-sm">
+                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[11px] font-semibold text-primary">
+                          {item.day}
+                        </span>
+                        <span className="text-foreground/80">{item.title}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           <div className="mx-auto max-w-6xl">
             <div className="grid gap-8 lg:grid-cols-3">
@@ -109,10 +200,12 @@ export default async function InquiryPage({
                   <div className="h-1.5 w-full bg-gradient-to-r from-accent via-primary to-accent" />
                   <CardHeader className="border-b border-border/60 bg-muted/30 px-6 py-6 md:px-8">
                     <CardTitle className="font-serif text-2xl font-semibold text-foreground">
-                      Inquiry Form
+                      {isPackageMode ? "Personalize This Journey" : "Inquiry Form"}
                     </CardTitle>
                     <CardDescription className="text-muted-foreground">
-                      Share your dates, interests, and preferences. We will handle the details.
+                      {isPackageMode
+                        ? "Confirm your details and let us know how you'd like this itinerary adjusted."
+                        : "Share your dates, interests, and preferences. We will handle the details."}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="px-6 py-8 md:px-8">
@@ -140,6 +233,7 @@ export default async function InquiryPage({
                         <label htmlFor="website">Website</label>
                         <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
                       </div>
+                      {isPackageMode && pkg && <input type="hidden" name="packageSlug" value={pkg.slug} />}
                       <div className="space-y-6">
                         <h3 className="eyebrow">Personal Information</h3>
                         <div className="grid gap-6 md:grid-cols-2">
@@ -239,38 +333,42 @@ export default async function InquiryPage({
                       <div className="space-y-6">
                         <h3 className="eyebrow">Trip Details</h3>
                         <div className="grid gap-6 md:grid-cols-2">
-                          <div className="space-y-2">
-                            <Label htmlFor="packageType">Package type *</Label>
-                            <div className="relative">
-                              <Compass
-                                className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-                                aria-hidden="true"
-                              />
-                              <select
-                                id="packageType"
-                                name="packageType"
-                                defaultValue={values.packageType}
-                                required
-                                aria-invalid={errorFields.has("packageType")}
-                                aria-describedby={errorFields.has("packageType") ? "packageType-error" : undefined}
-                                className={`${selectClass} pl-10`}
-                              >
-                                <option value="" disabled>
-                                  Select a package type
-                                </option>
-                                <option value="cultural">Cultural tour</option>
-                                <option value="festival">Festival tour</option>
-                                <option value="trekking">Trekking</option>
-                                <option value="luxury">Luxury</option>
-                                <option value="custom">Custom</option>
-                              </select>
+                          {isPackageMode ? (
+                            <input type="hidden" name="packageType" value={values.packageType} />
+                          ) : (
+                            <div className="space-y-2">
+                              <Label htmlFor="packageType">Package type *</Label>
+                              <div className="relative">
+                                <Compass
+                                  className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                  aria-hidden="true"
+                                />
+                                <select
+                                  id="packageType"
+                                  name="packageType"
+                                  defaultValue={values.packageType}
+                                  required
+                                  aria-invalid={errorFields.has("packageType")}
+                                  aria-describedby={errorFields.has("packageType") ? "packageType-error" : undefined}
+                                  className={`${selectClass} pl-10`}
+                                >
+                                  <option value="" disabled>
+                                    Select a package type
+                                  </option>
+                                  <option value="cultural">Cultural tour</option>
+                                  <option value="festival">Festival tour</option>
+                                  <option value="trekking">Trekking</option>
+                                  <option value="luxury">Luxury</option>
+                                  <option value="custom">Custom</option>
+                                </select>
+                              </div>
+                              {errorFields.has("packageType") && (
+                                <p id="packageType-error" className="text-sm text-destructive" role="alert">
+                                  Please select a package type.
+                                </p>
+                              )}
                             </div>
-                            {errorFields.has("packageType") && (
-                              <p id="packageType-error" className="text-sm text-destructive" role="alert">
-                                Please select a package type.
-                              </p>
-                            )}
-                          </div>
+                          )}
                           <div className="space-y-2">
                             <Label htmlFor="travelMonth">Travel month *</Label>
                             <div className="relative">
@@ -342,52 +440,83 @@ export default async function InquiryPage({
                               </p>
                             )}
                           </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="durationValue">Trip duration *</Label>
-                            <div className="relative">
-                              <Clock3
-                                className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-                                aria-hidden="true"
-                              />
-                              <select
-                                id="durationValue"
-                                name="duration"
-                                defaultValue={values.duration}
-                                required
-                                aria-invalid={errorFields.has("duration")}
-                                aria-describedby={errorFields.has("duration") ? "duration-error" : undefined}
-                                className={`${selectClass} pl-10`}
-                              >
-                                <option value="" disabled>
-                                  Select duration
-                                </option>
-                                <option value="3-5">3-5 days</option>
-                                <option value="6-8">6-8 days</option>
-                                <option value="9-12">9-12 days</option>
-                                <option value="13-15">13-15 days</option>
-                                <option value="15+">15+ days</option>
-                              </select>
+                          {isPackageMode ? (
+                            <input type="hidden" name="duration" value={values.duration} />
+                          ) : (
+                            <div className="space-y-2">
+                              <Label htmlFor="durationValue">Trip duration *</Label>
+                              <div className="relative">
+                                <Clock3
+                                  className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                  aria-hidden="true"
+                                />
+                                <select
+                                  id="durationValue"
+                                  name="duration"
+                                  defaultValue={values.duration}
+                                  required
+                                  aria-invalid={errorFields.has("duration")}
+                                  aria-describedby={errorFields.has("duration") ? "duration-error" : undefined}
+                                  className={`${selectClass} pl-10`}
+                                >
+                                  <option value="" disabled>
+                                    Select duration
+                                  </option>
+                                  <option value="3-5">3-5 days</option>
+                                  <option value="6-8">6-8 days</option>
+                                  <option value="9-12">9-12 days</option>
+                                  <option value="13-15">13-15 days</option>
+                                  <option value="15+">15+ days</option>
+                                </select>
+                              </div>
+                              {errorFields.has("duration") && (
+                                <p id="duration-error" className="text-sm text-destructive" role="alert">
+                                  Please select your trip duration.
+                                </p>
+                              )}
                             </div>
-                            {errorFields.has("duration") && (
-                              <p id="duration-error" className="text-sm text-destructive" role="alert">
-                                Please select your trip duration.
-                              </p>
-                            )}
-                          </div>
+                          )}
                         </div>
                       </div>
+
+                      {isPackageMode && (
+                        <div className="space-y-6">
+                          <h3 className="eyebrow">What Would You Like to Change?</h3>
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            {CUSTOMIZATION_OPTIONS.map((option) => (
+                              <label
+                                key={option.value}
+                                className="flex items-center gap-2.5 rounded-lg border border-border/60 px-3.5 py-2.5 text-sm text-foreground/85 transition-colors hover:border-accent/50 has-[:checked]:border-accent has-[:checked]:bg-accent/5"
+                              >
+                                <input
+                                  type="checkbox"
+                                  name="changeTypes"
+                                  value={option.value}
+                                  defaultChecked={selectedChangeTypes.has(option.value)}
+                                  className="h-4 w-4 rounded border-border/60 text-accent focus:ring-accent/30"
+                                />
+                                {option.label}
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
                       <div className="space-y-6">
                         <h3 className="eyebrow">Additional Information</h3>
                         <div className="space-y-2">
                           <Label htmlFor="message" className="flex items-center gap-2">
                             <MessageSquare className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                            Trip notes
+                            {isPackageMode ? "Tell us how you'd like to personalize this journey" : "Trip notes"}
                           </Label>
                           <Textarea
                             id="message"
                             name="message"
-                            placeholder="Tell us about your interests, pace, and must-sees..."
+                            placeholder={
+                              isPackageMode
+                                ? "e.g., add 2 extra nights in Punakha, skip the trek, include a spa day..."
+                                : "Tell us about your interests, pace, and must-sees..."
+                            }
                             defaultValue={values.message}
                             className="min-h-[120px] rounded-lg border border-border/60 text-sm transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20"
                           />

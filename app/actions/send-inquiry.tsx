@@ -3,7 +3,13 @@
 import { headers } from "next/headers"
 import { after } from "next/server"
 import { sendEmail } from "@/lib/mailer"
-import { createSubmission, countRecentSubmissionsByIp } from "@/lib/db/submissions"
+import {
+  createSubmission,
+  countRecentSubmissionsByIp,
+  type InquiryMode,
+  type PackageSnapshot,
+  type Customization,
+} from "@/lib/db/submissions"
 
 type InquiryData = {
   fullName: string
@@ -17,6 +23,11 @@ type InquiryData = {
   message: string
   // Honeypot field — hidden from humans; only bots fill it.
   website?: string
+  // Set server-side by the route handler from a trusted package-slug lookup —
+  // never trust these fields if they were ever to arrive from the client directly.
+  mode?: InquiryMode
+  packageSnapshot?: PackageSnapshot
+  customization?: Customization
 }
 
 const RATE_LIMIT_MAX = 5
@@ -92,9 +103,25 @@ function buildAdminHtml(data: InquiryData, referenceNumber: string) {
               </div>
             </div>
             ${
+              data.mode === "package" && data.packageSnapshot
+                ? `<div class="section">
+                     <div class="section-title">Selected Package</div>
+                     <div class="info-grid">
+                       <div><div class="label">Package</div><div class="value">${data.packageSnapshot.name}</div></div>
+                       <div><div class="label">Region</div><div class="value">${data.packageSnapshot.region}</div></div>
+                     </div>
+                     ${
+                       data.customization?.changeTypes?.length
+                         ? `<div class="message-box"><strong>Requested changes:</strong> ${data.customization.changeTypes.join(", ")}</div>`
+                         : ""
+                     }
+                   </div>`
+                : ""
+            }
+            ${
               data.message
                 ? `<div class="section">
-                     <div class="section-title">Additional Message</div>
+                     <div class="section-title">${data.mode === "package" ? "Customization Notes" : "Additional Message"}</div>
                      <div class="message-box">${data.message.replace(/\n/g, "<br>")}</div>
                    </div>`
                 : ""
@@ -188,7 +215,13 @@ export async function sendInquiryEmail(rawData: InquiryData) {
     // The dashboard log and the admin notification don't depend on each other —
     // run them together instead of one after the other.
     const [dbResult, adminEmailResult] = await Promise.allSettled([
-      createSubmission({ type: "inquiry", referenceNumber, ip, ...data }),
+      createSubmission({
+        type: "inquiry",
+        referenceNumber,
+        ip,
+        ...data,
+        mode: data.mode ?? "custom",
+      }),
       sendEmail({
         to: BUSINESS_EMAIL,
         replyTo: data.email,

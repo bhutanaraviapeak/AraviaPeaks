@@ -33,6 +33,9 @@ export default async function AdminDashboardPage() {
       referenceNumber: doc.referenceNumber,
       status: doc.status,
       createdAt: doc.createdAt.toISOString(),
+      mode: doc.mode,
+      packageSnapshot: doc.packageSnapshot,
+      customization: doc.customization,
     }))
   } catch (error) {
     console.error("[admin] Failed to load submissions:", error)

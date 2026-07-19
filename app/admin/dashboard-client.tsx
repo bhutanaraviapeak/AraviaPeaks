@@ -17,6 +17,7 @@ import {
   Sparkles,
 } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import type { InquiryMode, PackageSnapshot, Customization } from "@/lib/db/submissions"
 
 export type SubmissionView = {
   id: string
@@ -33,6 +34,23 @@ export type SubmissionView = {
   referenceNumber: string
   status: "new" | "contacted" | "closed"
   createdAt: string
+  mode?: InquiryMode
+  packageSnapshot?: PackageSnapshot
+  customization?: Customization
+}
+
+const CHANGE_TYPE_LABELS: Record<string, string> = {
+  "add-days": "Add extra days",
+  "reduce-days": "Reduce the duration",
+  "add-destination": "Add another destination",
+  "remove-destination": "Remove a destination",
+  "upgrade-accommodation": "Upgrade accommodation",
+  "include-festival": "Include a festival",
+  "add-trekking": "Add trekking or hiking",
+  "add-wellness": "Add wellness or spa experience",
+  "include-homestay": "Include a homestay",
+  "special-celebration": "Add a special celebration",
+  other: "Other request",
 }
 
 type Filter = "all" | "inquiry" | "contact" | "new"
@@ -225,7 +243,7 @@ export function DashboardClient({
 
       {/* Detail modal */}
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-h-[85vh] max-w-lg overflow-y-auto">
           {selected && (
             <>
               <DialogHeader>
@@ -253,6 +271,40 @@ export function DashboardClient({
                     <DetailField icon={CalendarDays} label="Travel month" value={selected.travelMonth || "—"} />
                     <DetailField icon={Users} label="Group size" value={selected.groupSize || "—"} />
                     <DetailField icon={Clock3} label="Duration" value={selected.duration || "—"} />
+                  </div>
+                )}
+
+                {selected.mode === "package" && selected.packageSnapshot && (
+                  <div className="border-t border-border/60 pt-4">
+                    <p className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                      <Compass className="h-3.5 w-3.5" aria-hidden="true" />
+                      Selected Package
+                    </p>
+                    <div className="rounded-lg bg-muted/50 p-3">
+                      <p className="font-serif text-base font-semibold text-foreground">
+                        {selected.packageSnapshot.name}
+                      </p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">
+                        {selected.packageSnapshot.region} &middot; {selected.packageSnapshot.duration}
+                      </p>
+                    </div>
+                    {selected.customization?.changeTypes && selected.customization.changeTypes.length > 0 && (
+                      <div className="mt-3">
+                        <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          Requested changes
+                        </p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {selected.customization.changeTypes.map((changeType) => (
+                            <span
+                              key={changeType}
+                              className="inline-flex items-center rounded-full border border-accent/30 bg-accent/5 px-2.5 py-1 text-xs font-medium text-accent"
+                            >
+                              {CHANGE_TYPE_LABELS[changeType] || changeType}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
