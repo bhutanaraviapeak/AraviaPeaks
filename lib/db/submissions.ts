@@ -49,6 +49,13 @@ export type Submission = {
   mode?: InquiryMode
   packageSnapshot?: PackageSnapshot
   customization?: Customization
+  // Custom-mode only (no specific package selected) — the traveler's own
+  // trip-building preferences, used to design a bespoke itinerary.
+  interests?: string[]
+  regions?: string[]
+  pace?: string
+  accommodation?: string
+  budget?: string
 }
 
 const COLLECTION = "submissions"

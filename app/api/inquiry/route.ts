@@ -51,6 +51,14 @@ export async function POST(request: Request) {
   const packageSlug = getStringValue(formData.get("packageSlug"))
   const changeTypes = formData.getAll("changeTypes").map((v) => String(v).trim()).filter(Boolean)
 
+  // Custom-mode only — the traveler's own trip-building preferences (no
+  // specific package selected).
+  const interests = formData.getAll("interests").map((v) => String(v).trim()).filter(Boolean)
+  const regions = formData.getAll("regions").map((v) => String(v).trim()).filter(Boolean)
+  const pace = getStringValue(formData.get("pace"))
+  const accommodation = getStringValue(formData.get("accommodation"))
+  const budget = getStringValue(formData.get("budget"))
+
   // Each checked customization option can carry its own detail text
   // (e.g. changeDetail_add-days -> "2 extra nights in Punakha").
   const changeDetails: Record<string, string> = {}
@@ -101,6 +109,11 @@ export async function POST(request: Request) {
       ...(packageSlug ? { package: packageSlug } : {}),
       ...(changeTypes.length ? { changeTypes: changeTypes.join(",") } : {}),
       ...(changeDetailsParam ? { changeDetails: changeDetailsParam } : {}),
+      ...(interests.length ? { interests: interests.join(",") } : {}),
+      ...(regions.length ? { regions: regions.join(",") } : {}),
+      ...(pace ? { pace } : {}),
+      ...(accommodation ? { accommodation } : {}),
+      ...(budget ? { budget } : {}),
     })
 
     return NextResponse.redirect(new URL(`/inquiry?${params.toString()}`, request.url), 303)
@@ -111,6 +124,15 @@ export async function POST(request: Request) {
     mode,
     packageSnapshot,
     customization: mode === "package" ? { changeTypes, changeDetails, notes: data.message } : undefined,
+    ...(mode === "custom"
+      ? {
+          interests: interests.length ? interests : undefined,
+          regions: regions.length ? regions : undefined,
+          pace: pace || undefined,
+          accommodation: accommodation || undefined,
+          budget: budget || undefined,
+        }
+      : {}),
   })
 
   if (!result.success) {
@@ -129,6 +151,11 @@ export async function POST(request: Request) {
       ...(packageSlug ? { package: packageSlug } : {}),
       ...(changeTypes.length ? { changeTypes: changeTypes.join(",") } : {}),
       ...(changeDetailsParam ? { changeDetails: changeDetailsParam } : {}),
+      ...(interests.length ? { interests: interests.join(",") } : {}),
+      ...(regions.length ? { regions: regions.join(",") } : {}),
+      ...(pace ? { pace } : {}),
+      ...(accommodation ? { accommodation } : {}),
+      ...(budget ? { budget } : {}),
     })
 
     return NextResponse.redirect(new URL(`/inquiry?${params.toString()}`, request.url), 303)

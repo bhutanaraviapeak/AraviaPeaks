@@ -28,6 +28,12 @@ type InquiryData = {
   mode?: InquiryMode
   packageSnapshot?: PackageSnapshot
   customization?: Customization
+  // Custom-mode trip-building preferences (no specific package selected).
+  interests?: string[]
+  regions?: string[]
+  pace?: string
+  accommodation?: string
+  budget?: string
 }
 
 const RATE_LIMIT_MAX = 5
@@ -52,6 +58,26 @@ const CHANGE_TYPE_LABELS: Record<string, string> = {
   "include-homestay": "Include a homestay",
   "special-celebration": "Add a special celebration",
   other: "Other request",
+}
+
+const PACE_LABELS: Record<string, string> = {
+  relaxed: "Relaxed — plenty of downtime",
+  balanced: "Balanced — mix of activity and rest",
+  active: "Active — pack in as much as possible",
+}
+
+const ACCOMMODATION_LABELS: Record<string, string> = {
+  "boutique-luxury": "Boutique & luxury",
+  "comfortable-mid-range": "Comfortable mid-range",
+  homestays: "Homestays & authentic stays",
+  mixed: "A mix — surprise me",
+}
+
+const BUDGET_LABELS: Record<string, string> = {
+  "under-2000": "Under $2,000",
+  "2000-3500": "$2,000 – $3,500",
+  "3500-5000": "$3,500 – $5,000",
+  "above-5000": "Above $5,000",
 }
 
 const BUSINESS_EMAIL = "bhutanaraviapeak@gmail.com"
@@ -135,6 +161,21 @@ function buildAdminHtml(data: InquiryData, referenceNumber: string) {
                              .join("")}</ul></div>`
                          : ""
                      }
+                   </div>`
+                : ""
+            }
+            ${
+              data.mode === "custom" &&
+              (data.interests?.length || data.regions?.length || data.pace || data.accommodation || data.budget)
+                ? `<div class="section">
+                     <div class="section-title">Travel Style</div>
+                     <div class="info-grid">
+                       ${data.interests?.length ? `<div><div class="label">Interests</div><div class="value">${data.interests.join(", ")}</div></div>` : ""}
+                       ${data.regions?.length ? `<div><div class="label">Regions of Interest</div><div class="value">${data.regions.join(", ")}</div></div>` : ""}
+                       ${data.pace ? `<div><div class="label">Travel Pace</div><div class="value">${PACE_LABELS[data.pace] || data.pace}</div></div>` : ""}
+                       ${data.accommodation ? `<div><div class="label">Accommodation Style</div><div class="value">${ACCOMMODATION_LABELS[data.accommodation] || data.accommodation}</div></div>` : ""}
+                       ${data.budget ? `<div><div class="label">Budget Range</div><div class="value">${BUDGET_LABELS[data.budget] || data.budget}</div></div>` : ""}
+                     </div>
                    </div>`
                 : ""
             }

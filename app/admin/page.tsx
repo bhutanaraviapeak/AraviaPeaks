@@ -36,6 +36,11 @@ export default async function AdminDashboardPage() {
       mode: doc.mode,
       packageSnapshot: doc.packageSnapshot,
       customization: doc.customization,
+      interests: doc.interests,
+      regions: doc.regions,
+      pace: doc.pace,
+      accommodation: doc.accommodation,
+      budget: doc.budget,
     }))
   } catch (error) {
     console.error("[admin] Failed to load submissions:", error)

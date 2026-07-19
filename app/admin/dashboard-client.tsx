@@ -37,6 +37,11 @@ export type SubmissionView = {
   mode?: InquiryMode
   packageSnapshot?: PackageSnapshot
   customization?: Customization
+  interests?: string[]
+  regions?: string[]
+  pace?: string
+  accommodation?: string
+  budget?: string
 }
 
 const CHANGE_TYPE_LABELS: Record<string, string> = {
@@ -51,6 +56,26 @@ const CHANGE_TYPE_LABELS: Record<string, string> = {
   "include-homestay": "Include a homestay",
   "special-celebration": "Add a special celebration",
   other: "Other request",
+}
+
+const PACE_LABELS: Record<string, string> = {
+  relaxed: "Relaxed — plenty of downtime",
+  balanced: "Balanced — mix of activity and rest",
+  active: "Active — pack in as much as possible",
+}
+
+const ACCOMMODATION_LABELS: Record<string, string> = {
+  "boutique-luxury": "Boutique & luxury",
+  "comfortable-mid-range": "Comfortable mid-range",
+  homestays: "Homestays & authentic stays",
+  mixed: "A mix — surprise me",
+}
+
+const BUDGET_LABELS: Record<string, string> = {
+  "under-2000": "Under $2,000",
+  "2000-3500": "$2,000 – $3,500",
+  "3500-5000": "$3,500 – $5,000",
+  "above-5000": "Above $5,000",
 }
 
 type Filter = "all" | "inquiry" | "contact" | "new"
@@ -313,6 +338,76 @@ export function DashboardClient({
                     )}
                   </div>
                 )}
+
+                {selected.mode === "custom" &&
+                  (selected.interests?.length ||
+                    selected.regions?.length ||
+                    selected.pace ||
+                    selected.accommodation ||
+                    selected.budget) && (
+                    <div className="border-t border-border/60 pt-4">
+                      <p className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                        Travel Style
+                      </p>
+                      <div className="space-y-2">
+                        {selected.interests && selected.interests.length > 0 && (
+                          <div>
+                            <p className="mb-1 text-xs text-muted-foreground">Interests</p>
+                            <div className="flex flex-wrap gap-1.5">
+                              {selected.interests.map((interest) => (
+                                <span
+                                  key={interest}
+                                  className="rounded-full border border-accent/30 bg-accent/5 px-2.5 py-1 text-xs font-medium text-accent"
+                                >
+                                  {interest}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {selected.regions && selected.regions.length > 0 && (
+                          <div>
+                            <p className="mb-1 text-xs text-muted-foreground">Regions of interest</p>
+                            <div className="flex flex-wrap gap-1.5">
+                              {selected.regions.map((region) => (
+                                <span
+                                  key={region}
+                                  className="rounded-full border border-accent/30 bg-accent/5 px-2.5 py-1 text-xs font-medium text-accent"
+                                >
+                                  {region}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {(selected.pace || selected.accommodation || selected.budget) && (
+                          <div className="grid grid-cols-1 gap-2 rounded-lg bg-muted/50 p-3 text-xs sm:grid-cols-3">
+                            {selected.pace && (
+                              <div>
+                                <p className="text-muted-foreground">Pace</p>
+                                <p className="font-medium text-foreground">{PACE_LABELS[selected.pace] || selected.pace}</p>
+                              </div>
+                            )}
+                            {selected.accommodation && (
+                              <div>
+                                <p className="text-muted-foreground">Accommodation</p>
+                                <p className="font-medium text-foreground">
+                                  {ACCOMMODATION_LABELS[selected.accommodation] || selected.accommodation}
+                                </p>
+                              </div>
+                            )}
+                            {selected.budget && (
+                              <div>
+                                <p className="text-muted-foreground">Budget</p>
+                                <p className="font-medium text-foreground">{BUDGET_LABELS[selected.budget] || selected.budget}</p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
 
                 <div className="border-t border-border/60 pt-4">
                   <p className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">

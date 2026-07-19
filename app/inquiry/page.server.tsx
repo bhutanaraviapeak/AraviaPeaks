@@ -22,7 +22,33 @@ import {
   ShieldCheck,
   MapPin,
   CalendarClock,
+  Heart,
+  Wallet,
+  Gauge,
+  Hotel,
 } from "lucide-react"
+
+const INTEREST_OPTIONS = [
+  "Culture & Heritage",
+  "Trekking & Adventure",
+  "Festivals & Events",
+  "Wildlife & Nature",
+  "Wellness & Spa",
+  "Photography",
+  "Family-Friendly",
+  "Luxury & Comfort",
+]
+
+const REGION_OPTIONS = [
+  "Paro",
+  "Thimphu",
+  "Punakha",
+  "Bumthang",
+  "Haa Valley",
+  "Phobjikha Valley",
+  "Eastern Bhutan",
+  "Not sure — recommend for me",
+]
 
 const CUSTOMIZATION_OPTIONS = [
   { value: "add-days", label: "Add extra days", placeholder: "How many extra days, and where?" },
@@ -119,7 +145,13 @@ export default async function InquiryPage({
     groupSize: getStringValue(params.groupSize),
     duration: getStringValue(params.durationValue) || prefillDuration,
     message: getStringValue(params.message) || prefillMessage,
+    pace: getStringValue(params.pace),
+    accommodation: getStringValue(params.accommodation),
+    budget: getStringValue(params.budget),
   }
+
+  const selectedInterests = new Set(getStringValue(params.interests).split(",").filter(Boolean))
+  const selectedRegions = new Set(getStringValue(params.regions).split(",").filter(Boolean))
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -487,6 +519,129 @@ export default async function InquiryPage({
                           )}
                         </div>
                       </div>
+
+                      {!isPackageMode && (
+                        <div className="space-y-6">
+                          <h3 className="eyebrow">Your Travel Style</h3>
+                          <p className="-mt-2 text-sm text-muted-foreground">
+                            Help us tailor a bespoke itinerary — every field here is optional.
+                          </p>
+
+                          <div className="space-y-3">
+                            <Label className="flex items-center gap-2">
+                              <Heart className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                              What interests you most?
+                            </Label>
+                            <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+                              {INTEREST_OPTIONS.map((interest) => (
+                                <label
+                                  key={interest}
+                                  className="flex cursor-pointer items-center gap-2 rounded-lg border border-border/60 px-3 py-2.5 text-sm text-foreground/85 transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent/5"
+                                >
+                                  <input
+                                    type="checkbox"
+                                    name="interests"
+                                    value={interest}
+                                    defaultChecked={selectedInterests.has(interest)}
+                                    className="h-4 w-4 rounded border-border/60 text-accent focus:ring-accent/30"
+                                  />
+                                  {interest}
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="space-y-3">
+                            <Label className="flex items-center gap-2">
+                              <MapPin className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                              Regions you&rsquo;d like to visit
+                            </Label>
+                            <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+                              {REGION_OPTIONS.map((region) => (
+                                <label
+                                  key={region}
+                                  className="flex cursor-pointer items-center gap-2 rounded-lg border border-border/60 px-3 py-2.5 text-sm text-foreground/85 transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent/5"
+                                >
+                                  <input
+                                    type="checkbox"
+                                    name="regions"
+                                    value={region}
+                                    defaultChecked={selectedRegions.has(region)}
+                                    className="h-4 w-4 rounded border-border/60 text-accent focus:ring-accent/30"
+                                  />
+                                  {region}
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="grid gap-6 md:grid-cols-3">
+                            <div className="space-y-2">
+                              <Label htmlFor="pace">Travel pace</Label>
+                              <div className="relative">
+                                <Gauge
+                                  className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                  aria-hidden="true"
+                                />
+                                <select
+                                  id="pace"
+                                  name="pace"
+                                  defaultValue={values.pace}
+                                  className={`${selectClass} pl-10`}
+                                >
+                                  <option value="">No preference</option>
+                                  <option value="relaxed">Relaxed — plenty of downtime</option>
+                                  <option value="balanced">Balanced — mix of activity and rest</option>
+                                  <option value="active">Active — pack in as much as possible</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="accommodation">Accommodation style</Label>
+                              <div className="relative">
+                                <Hotel
+                                  className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                  aria-hidden="true"
+                                />
+                                <select
+                                  id="accommodation"
+                                  name="accommodation"
+                                  defaultValue={values.accommodation}
+                                  className={`${selectClass} pl-10`}
+                                >
+                                  <option value="">No preference</option>
+                                  <option value="boutique-luxury">Boutique & luxury</option>
+                                  <option value="comfortable-mid-range">Comfortable mid-range</option>
+                                  <option value="homestays">Homestays & authentic stays</option>
+                                  <option value="mixed">A mix — surprise me</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="budget">Budget range</Label>
+                              <div className="relative">
+                                <Wallet
+                                  className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                  aria-hidden="true"
+                                />
+                                <select
+                                  id="budget"
+                                  name="budget"
+                                  defaultValue={values.budget}
+                                  className={`${selectClass} pl-10`}
+                                >
+                                  <option value="">Not sure — please advise</option>
+                                  <option value="under-2000">Under $2,000</option>
+                                  <option value="2000-3500">$2,000 – $3,500</option>
+                                  <option value="3500-5000">$3,500 – $5,000</option>
+                                  <option value="above-5000">Above $5,000</option>
+                                </select>
+                              </div>
+                              <p className="text-xs text-muted-foreground">Per person, excluding international flights.</p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
 
                       {isPackageMode && (
                         <div className="space-y-6">
