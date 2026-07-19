@@ -12,6 +12,8 @@ const staticRoutes = [
   "/bhutan/farmhouses-homestays",
   "/contact",
   "/inquiry",
+  "/terms",
+  "/privacy",
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {

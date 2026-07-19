@@ -114,9 +114,19 @@ export function Footer() {
         </div>
 
         <div className="mt-12 border-t border-white/15 pt-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <p className="text-xs text-white/70">
-            &copy; {new Date().getFullYear()} Bhutan Aravia Peaks. All rights reserved.
-          </p>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+            <p className="text-xs text-white/70">
+              &copy; {new Date().getFullYear()} Bhutan Aravia Peaks. All rights reserved.
+            </p>
+            <div className="flex items-center gap-4 text-xs text-white/70">
+              <Link href="/terms" className="hover:text-white transition-colors">
+                Terms &amp; Conditions
+              </Link>
+              <Link href="/privacy" className="hover:text-white transition-colors">
+                Privacy Policy
+              </Link>
+            </div>
+          </div>
           <div className="flex flex-wrap items-center gap-3">
             <span className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-xs text-white/70">
               Licensed Bhutan Tour Operator
