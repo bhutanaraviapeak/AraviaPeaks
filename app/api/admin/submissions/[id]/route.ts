@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { updateSubmissionStatus, type SubmissionStatus } from "@/lib/db/submissions"
+import { updateSubmissionStatus, deleteSubmission, type SubmissionStatus } from "@/lib/db/submissions"
 
 export const runtime = "nodejs"
 
@@ -27,6 +27,21 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error("[admin] Failed to update submission status:", error)
+    return NextResponse.json({ error: "Server error" }, { status: 500 })
+  }
+}
+
+export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+
+  try {
+    const deleted = await deleteSubmission(id)
+    if (!deleted) {
+      return NextResponse.json({ error: "Submission not found" }, { status: 404 })
+    }
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("[admin] Failed to delete submission:", error)
     return NextResponse.json({ error: "Server error" }, { status: 500 })
   }
 }

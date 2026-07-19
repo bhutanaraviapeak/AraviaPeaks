@@ -90,3 +90,9 @@ export async function updateSubmissionStatus(id: string, status: SubmissionStatu
     .updateOne({ _id: new ObjectId(id) }, { $set: { status } })
   return result.matchedCount > 0
 }
+
+export async function deleteSubmission(id: string): Promise<boolean> {
+  const db = await getDb()
+  const result = await db.collection<Submission>(COLLECTION).deleteOne({ _id: new ObjectId(id) })
+  return result.deletedCount > 0
+}

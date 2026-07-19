@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   XCircle,
   Sparkles,
+  Trash2,
 } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import type { InquiryMode, PackageSnapshot, Customization } from "@/lib/db/submissions"
@@ -107,6 +108,8 @@ export function DashboardClient({
   const [query, setQuery] = useState("")
   const [selected, setSelected] = useState<SubmissionView | null>(null)
   const [updating, setUpdating] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [confirmingDeleteId, setConfirmingDeleteId] = useState<string | null>(null)
 
   const stats = useMemo(
     () => ({
@@ -144,6 +147,21 @@ export function DashboardClient({
       console.error("[admin] Failed to update submission status:", error)
     } finally {
       setUpdating(false)
+    }
+  }
+
+  const deleteSubmission = async (id: string) => {
+    setDeleting(true)
+    try {
+      const res = await fetch(`/api/admin/submissions/${id}`, { method: "DELETE" })
+      if (!res.ok) throw new Error("Failed to delete submission")
+      setSubmissions((prev) => prev.filter((s) => s.id !== id))
+      setSelected((prev) => (prev && prev.id === id ? null : prev))
+      setConfirmingDeleteId(null)
+    } catch (error) {
+      console.error("[admin] Failed to delete submission:", error)
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -267,7 +285,15 @@ export function DashboardClient({
       </div>
 
       {/* Detail modal */}
-      <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
+      <Dialog
+        open={!!selected}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelected(null)
+            setConfirmingDeleteId(null)
+          }
+        }}
+      >
         <DialogContent className="max-h-[85vh] max-w-lg overflow-y-auto">
           {selected && (
             <>
@@ -436,6 +462,40 @@ export function DashboardClient({
                       Mark {status}
                     </button>
                   ))}
+                </div>
+
+                <div className="border-t border-border/60 pt-4">
+                  {confirmingDeleteId === selected.id ? (
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-xs font-medium text-destructive">Delete this submission permanently?</p>
+                      <button
+                        type="button"
+                        disabled={deleting}
+                        onClick={() => deleteSubmission(selected.id)}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-destructive/40 bg-destructive/10 px-3 py-1.5 text-xs font-medium text-destructive transition-colors hover:bg-destructive/20 disabled:cursor-default disabled:opacity-60"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                        {deleting ? "Deleting..." : "Confirm delete"}
+                      </button>
+                      <button
+                        type="button"
+                        disabled={deleting}
+                        onClick={() => setConfirmingDeleteId(null)}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-foreground/70 transition-colors hover:border-accent/50"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setConfirmingDeleteId(selected.id)}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-destructive/80 transition-colors hover:border-destructive/40 hover:bg-destructive/5"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                      Delete submission
+                    </button>
+                  )}
                 </div>
               </div>
             </>
