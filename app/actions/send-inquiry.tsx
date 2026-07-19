@@ -1,6 +1,7 @@
 "use server"
 
 import { headers } from "next/headers"
+import { after } from "next/server"
 import { sendEmail } from "@/lib/mailer"
 import { createSubmission, countRecentSubmissionsByIp } from "@/lib/db/submissions"
 
@@ -184,30 +185,39 @@ export async function sendInquiryEmail(rawData: InquiryData) {
 
     const referenceNumber = generateReferenceNumber()
 
-    try {
-      await createSubmission({ type: "inquiry", referenceNumber, ip, ...data })
-    } catch (dbError) {
-      // The dashboard log is best-effort; it should never block the email flow.
-      console.error("[inquiry] Failed to log submission to MongoDB:", dbError)
+    // The dashboard log and the admin notification don't depend on each other —
+    // run them together instead of one after the other.
+    const [dbResult, adminEmailResult] = await Promise.allSettled([
+      createSubmission({ type: "inquiry", referenceNumber, ip, ...data }),
+      sendEmail({
+        to: BUSINESS_EMAIL,
+        replyTo: data.email,
+        subject: `New Travel Inquiry from ${data.fullName} - Ref: ${referenceNumber}`,
+        html: buildAdminHtml(data, referenceNumber),
+      }),
+    ])
+
+    if (dbResult.status === "rejected") {
+      // The dashboard log is best-effort; it should never block the response.
+      console.error("[inquiry] Failed to log submission to MongoDB:", dbResult.reason)
+    }
+    if (adminEmailResult.status === "rejected") {
+      throw adminEmailResult.reason
     }
 
-    await sendEmail({
-      to: BUSINESS_EMAIL,
-      replyTo: data.email,
-      subject: `New Travel Inquiry from ${data.fullName} - Ref: ${referenceNumber}`,
-      html: buildAdminHtml(data, referenceNumber),
+    // The customer's auto-reply isn't needed for the response we give them right
+    // now — send it after we respond so it doesn't add to their wait.
+    after(async () => {
+      try {
+        await sendEmail({
+          to: data.email,
+          subject: `Thank You for Your Inquiry - Ref: ${referenceNumber}`,
+          html: buildCustomerHtml(data.fullName, referenceNumber),
+        })
+      } catch (autoReplyError) {
+        console.error("[inquiry] Auto-reply to customer failed:", autoReplyError)
+      }
     })
-
-    try {
-      await sendEmail({
-        to: data.email,
-        subject: `Thank You for Your Inquiry - Ref: ${referenceNumber}`,
-        html: buildCustomerHtml(data.fullName, referenceNumber),
-      })
-    } catch (autoReplyError) {
-      // The inquiry itself was already delivered; a failed auto-reply shouldn't fail the request.
-      console.error("[inquiry] Auto-reply to customer failed:", autoReplyError)
-    }
 
     return {
       success: true,
