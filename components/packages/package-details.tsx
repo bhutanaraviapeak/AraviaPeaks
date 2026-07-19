@@ -56,6 +56,13 @@ const safeArray = <T,>(value?: T[]) => (Array.isArray(value) ? value.filter(Bool
 
 export function PackageDetails({ pkg }: { pkg: TourPackage }) {
   const categoryLabel = packageCategories.find((cat) => cat.slug === pkg.category)?.label ?? pkg.category
+  const inquiryParams = new URLSearchParams({
+    package: pkg.slug,
+    name: pkg.title,
+    category: pkg.category,
+    ...(pkg.durationLabel ? { duration: pkg.durationLabel } : {}),
+  })
+  const inquiryHref = `/inquiry?${inquiryParams.toString()}`
   const heroImage = pkg.heroImage || DEFAULT_HERO
   const gallery = safeArray(pkg.gallery)
   const galleryImages = gallery.length ? gallery : [heroImage]
@@ -149,7 +156,7 @@ export function PackageDetails({ pkg }: { pkg: TourPackage }) {
                       <h2 className="font-serif text-2xl font-semibold">Curated for immersive Bhutan travel</h2>
                     </div>
                     <Button variant="outline" size="sm" asChild>
-                      <Link href="/inquiry">Request a quote</Link>
+                      <Link href={inquiryHref}>Request a quote</Link>
                     </Button>
                   </div>
                   <p className="text-muted-foreground leading-relaxed">{pkg.description || pkg.summary}</p>
@@ -273,7 +280,13 @@ export function PackageDetails({ pkg }: { pkg: TourPackage }) {
 
             <div className="space-y-6">
               <div className="sticky top-24">
-                <PackageInquiryCard packageTitle={pkg.title} priceLabel={formatCurrency(pkg.startingFrom)} />
+                <PackageInquiryCard
+                  packageSlug={pkg.slug}
+                  packageTitle={pkg.title}
+                  packageCategory={pkg.category}
+                  durationLabel={pkg.durationLabel}
+                  priceLabel={formatCurrency(pkg.startingFrom)}
+                />
               </div>
             </div>
           </div>
