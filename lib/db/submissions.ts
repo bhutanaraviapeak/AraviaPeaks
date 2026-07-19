@@ -22,6 +22,9 @@ export type PackageSnapshot = {
 
 export type Customization = {
   changeTypes: string[]
+  // Per-selected-option detail text, keyed by the change type value
+  // (e.g. { "add-days": "2 extra nights in Punakha" }).
+  changeDetails?: Record<string, string>
   notes?: string
 }
 

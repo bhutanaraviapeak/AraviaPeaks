@@ -25,17 +25,17 @@ import {
 } from "lucide-react"
 
 const CUSTOMIZATION_OPTIONS = [
-  { value: "add-days", label: "Add extra days" },
-  { value: "reduce-days", label: "Reduce the duration" },
-  { value: "add-destination", label: "Add another destination" },
-  { value: "remove-destination", label: "Remove a destination" },
-  { value: "upgrade-accommodation", label: "Upgrade accommodation" },
-  { value: "include-festival", label: "Include a festival" },
-  { value: "add-trekking", label: "Add trekking or hiking" },
-  { value: "add-wellness", label: "Add wellness or spa experience" },
-  { value: "include-homestay", label: "Include a homestay" },
-  { value: "special-celebration", label: "Add a special celebration" },
-  { value: "other", label: "Other request" },
+  { value: "add-days", label: "Add extra days", placeholder: "How many extra days, and where?" },
+  { value: "reduce-days", label: "Reduce the duration", placeholder: "How many days should we remove?" },
+  { value: "add-destination", label: "Add another destination", placeholder: "Which destination would you like to add?" },
+  { value: "remove-destination", label: "Remove a destination", placeholder: "Which destination would you like to remove?" },
+  { value: "upgrade-accommodation", label: "Upgrade accommodation", placeholder: "e.g., 5-star hotel, boutique stay..." },
+  { value: "include-festival", label: "Include a festival", placeholder: "Which festival, if you have one in mind?" },
+  { value: "add-trekking", label: "Add trekking or hiking", placeholder: "Preferred trek or difficulty level?" },
+  { value: "add-wellness", label: "Add wellness or spa experience", placeholder: "e.g., spa day, hot-stone bath..." },
+  { value: "include-homestay", label: "Include a homestay", placeholder: "Any preferred region for the homestay?" },
+  { value: "special-celebration", label: "Add a special celebration", placeholder: "e.g., anniversary, birthday..." },
+  { value: "other", label: "Other request", placeholder: "Tell us more" },
 ]
 
 type InquirySearchParams = {
@@ -99,6 +99,15 @@ export default async function InquiryPage({
   const prefillMessage = !pkg && packageName ? `I am interested in the ${packageName} package.` : ""
 
   const selectedChangeTypes = new Set(getStringValue(params.changeTypes).split(",").filter(Boolean))
+
+  const changeDetailValues: Record<string, string> = {}
+  getStringValue(params.changeDetails)
+    .split("|")
+    .filter(Boolean)
+    .forEach((pair) => {
+      const [key, value] = pair.split(":")
+      if (key) changeDetailValues[decodeURIComponent(key)] = decodeURIComponent(value || "")
+    })
 
   const values = {
     fullName: getStringValue(params.fullName),
@@ -482,21 +491,35 @@ export default async function InquiryPage({
                       {isPackageMode && (
                         <div className="space-y-6">
                           <h3 className="eyebrow">What Would You Like to Change?</h3>
+                          <p className="-mt-2 text-sm text-muted-foreground">
+                            Check any that apply — a detail field will appear so you can tell us more.
+                          </p>
                           <div className="grid gap-3 sm:grid-cols-2">
                             {CUSTOMIZATION_OPTIONS.map((option) => (
-                              <label
+                              <div
                                 key={option.value}
-                                className="flex items-center gap-2.5 rounded-lg border border-border/60 px-3.5 py-2.5 text-sm text-foreground/85 transition-colors hover:border-accent/50 has-[:checked]:border-accent has-[:checked]:bg-accent/5"
+                                className="group rounded-lg border border-border/60 transition-colors has-[:checked]:border-accent has-[:checked]:bg-accent/5"
                               >
-                                <input
-                                  type="checkbox"
-                                  name="changeTypes"
-                                  value={option.value}
-                                  defaultChecked={selectedChangeTypes.has(option.value)}
-                                  className="h-4 w-4 rounded border-border/60 text-accent focus:ring-accent/30"
-                                />
-                                {option.label}
-                              </label>
+                                <label className="flex cursor-pointer items-center gap-2.5 px-3.5 py-2.5 text-sm text-foreground/85">
+                                  <input
+                                    type="checkbox"
+                                    name="changeTypes"
+                                    value={option.value}
+                                    defaultChecked={selectedChangeTypes.has(option.value)}
+                                    className="h-4 w-4 rounded border-border/60 text-accent focus:ring-accent/30"
+                                  />
+                                  {option.label}
+                                </label>
+                                <div className="hidden px-3.5 pb-3 group-has-[:checked]:block">
+                                  <input
+                                    type="text"
+                                    name={`changeDetail_${option.value}`}
+                                    defaultValue={changeDetailValues[option.value] || ""}
+                                    placeholder={option.placeholder}
+                                    className="h-9 w-full rounded-md border border-border/60 bg-background px-3 text-sm transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
+                                  />
+                                </div>
+                              </div>
                             ))}
                           </div>
                         </div>
@@ -507,14 +530,14 @@ export default async function InquiryPage({
                         <div className="space-y-2">
                           <Label htmlFor="message" className="flex items-center gap-2">
                             <MessageSquare className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                            {isPackageMode ? "Tell us how you'd like to personalize this journey" : "Trip notes"}
+                            {isPackageMode ? "Anything else you'd like us to know?" : "Trip notes"}
                           </Label>
                           <Textarea
                             id="message"
                             name="message"
                             placeholder={
                               isPackageMode
-                                ? "e.g., add 2 extra nights in Punakha, skip the trek, include a spa day..."
+                                ? "Any other requests or context for your Bhutan specialist..."
                                 : "Tell us about your interests, pace, and must-sees..."
                             }
                             defaultValue={values.message}

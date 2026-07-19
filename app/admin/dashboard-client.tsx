@@ -293,15 +293,21 @@ export function DashboardClient({
                         <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                           Requested changes
                         </p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {selected.customization.changeTypes.map((changeType) => (
-                            <span
-                              key={changeType}
-                              className="inline-flex items-center rounded-full border border-accent/30 bg-accent/5 px-2.5 py-1 text-xs font-medium text-accent"
-                            >
-                              {CHANGE_TYPE_LABELS[changeType] || changeType}
-                            </span>
-                          ))}
+                        <div className="space-y-1.5">
+                          {selected.customization.changeTypes.map((changeType) => {
+                            const detail = selected.customization?.changeDetails?.[changeType]
+                            return (
+                              <div
+                                key={changeType}
+                                className="rounded-lg border border-accent/30 bg-accent/5 px-2.5 py-1.5 text-xs"
+                              >
+                                <span className="font-medium text-accent">
+                                  {CHANGE_TYPE_LABELS[changeType] || changeType}
+                                </span>
+                                {detail && <span className="text-foreground/80"> — {detail}</span>}
+                              </div>
+                            )
+                          })}
                         </div>
                       </div>
                     )}

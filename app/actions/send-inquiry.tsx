@@ -40,6 +40,20 @@ async function getClientIp(): Promise<string> {
 }
 
 // Where admin notifications actually land — the real inbox behind info@'s forwarding rule.
+const CHANGE_TYPE_LABELS: Record<string, string> = {
+  "add-days": "Add extra days",
+  "reduce-days": "Reduce the duration",
+  "add-destination": "Add another destination",
+  "remove-destination": "Remove a destination",
+  "upgrade-accommodation": "Upgrade accommodation",
+  "include-festival": "Include a festival",
+  "add-trekking": "Add trekking or hiking",
+  "add-wellness": "Add wellness or spa experience",
+  "include-homestay": "Include a homestay",
+  "special-celebration": "Add a special celebration",
+  other: "Other request",
+}
+
 const BUSINESS_EMAIL = "bhutanaraviapeak@gmail.com"
 // What customers see in email footers — the professional domain address.
 const DISPLAY_EMAIL = "info@bhutanaraviapeaks.com"
@@ -112,7 +126,13 @@ function buildAdminHtml(data: InquiryData, referenceNumber: string) {
                      </div>
                      ${
                        data.customization?.changeTypes?.length
-                         ? `<div class="message-box"><strong>Requested changes:</strong> ${data.customization.changeTypes.join(", ")}</div>`
+                         ? `<div class="message-box"><strong>Requested changes:</strong><ul style="margin:8px 0 0;padding-left:20px;">${data.customization.changeTypes
+                             .map((changeType) => {
+                               const label = CHANGE_TYPE_LABELS[changeType] || changeType
+                               const detail = data.customization?.changeDetails?.[changeType]
+                               return `<li>${label}${detail ? ` — ${detail}` : ""}</li>`
+                             })
+                             .join("")}</ul></div>`
                          : ""
                      }
                    </div>`

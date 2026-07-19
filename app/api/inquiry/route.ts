@@ -51,6 +51,18 @@ export async function POST(request: Request) {
   const packageSlug = getStringValue(formData.get("packageSlug"))
   const changeTypes = formData.getAll("changeTypes").map((v) => String(v).trim()).filter(Boolean)
 
+  // Each checked customization option can carry its own detail text
+  // (e.g. changeDetail_add-days -> "2 extra nights in Punakha").
+  const changeDetails: Record<string, string> = {}
+  for (const [key, value] of formData.entries()) {
+    if (key.startsWith("changeDetail_") && typeof value === "string" && value.trim()) {
+      changeDetails[key.slice("changeDetail_".length)] = value.trim()
+    }
+  }
+  const changeDetailsParam = Object.entries(changeDetails)
+    .map(([key, value]) => `${encodeURIComponent(key)}:${encodeURIComponent(value)}`)
+    .join("|")
+
   let mode: InquiryMode = "custom"
   let packageSnapshot: PackageSnapshot | undefined
 
@@ -88,6 +100,7 @@ export async function POST(request: Request) {
       message: data.message,
       ...(packageSlug ? { package: packageSlug } : {}),
       ...(changeTypes.length ? { changeTypes: changeTypes.join(",") } : {}),
+      ...(changeDetailsParam ? { changeDetails: changeDetailsParam } : {}),
     })
 
     return NextResponse.redirect(new URL(`/inquiry?${params.toString()}`, request.url), 303)
@@ -97,7 +110,7 @@ export async function POST(request: Request) {
     ...data,
     mode,
     packageSnapshot,
-    customization: mode === "package" ? { changeTypes, notes: data.message } : undefined,
+    customization: mode === "package" ? { changeTypes, changeDetails, notes: data.message } : undefined,
   })
 
   if (!result.success) {
@@ -115,6 +128,7 @@ export async function POST(request: Request) {
       message: data.message,
       ...(packageSlug ? { package: packageSlug } : {}),
       ...(changeTypes.length ? { changeTypes: changeTypes.join(",") } : {}),
+      ...(changeDetailsParam ? { changeDetails: changeDetailsParam } : {}),
     })
 
     return NextResponse.redirect(new URL(`/inquiry?${params.toString()}`, request.url), 303)
