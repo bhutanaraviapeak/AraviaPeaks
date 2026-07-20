@@ -1,8 +1,15 @@
 "use client"
 
+import { usePathname } from "next/navigation"
+
 export function WhatsAppFloat() {
+  const pathname = usePathname()
+  // Package detail pages show the mobile sticky "Request a quote" bar along the
+  // bottom edge — lift the float above it there so it never covers the CTA.
+  const hasStickyCta = /^\/packages\/[^/]+\/[^/]+/.test(pathname)
+
   return (
-    <div className="fixed bottom-6 right-6 z-50 group">
+    <div className={`fixed right-6 z-50 group ${hasStickyCta ? "bottom-24 md:bottom-6" : "bottom-6"}`}>
       <a
         href="https://wa.me/97517565604"
         target="_blank"

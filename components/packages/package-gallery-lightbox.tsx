@@ -27,7 +27,8 @@ export function PackageGalleryLightbox({ images, title }: { images: string[]; ti
           <button
             key={`${image}-${index}`}
             type="button"
-            className="group relative aspect-[4/3] overflow-hidden rounded-xl"
+            aria-label={`View photo ${index + 1} of ${gallery.length}`}
+            className="group relative aspect-[4/3] cursor-pointer overflow-hidden rounded-xl"
             onClick={() => openAt(index)}
           >
             <Image
@@ -71,9 +72,10 @@ export function PackageGalleryLightbox({ images, title }: { images: string[]; ti
                 <button
                   key={`${image}-thumb-${index}`}
                   type="button"
+                  aria-label={`Show photo ${index + 1}`}
                   onClick={() => setActiveIndex(index)}
                   className={cn(
-                    "relative h-16 w-24 overflow-hidden rounded-lg border",
+                    "relative h-16 w-24 shrink-0 cursor-pointer overflow-hidden rounded-lg border",
                     index === activeIndex ? "border-primary" : "border-border/60",
                   )}
                 >

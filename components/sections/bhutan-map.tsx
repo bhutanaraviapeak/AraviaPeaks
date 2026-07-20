@@ -50,7 +50,7 @@ export function BhutanMap() {
                   key={region.name}
                   type="button"
                   onClick={() => setSelectedRegion(region.name)}
-                  className={`group rounded-2xl border p-5 text-left transition-all duration-300 ${
+                  className={`group cursor-pointer rounded-2xl border p-5 text-left transition-all duration-300 ${
                     active
                       ? "border-accent bg-card shadow-[0_18px_40px_-24px_rgba(18,37,54,0.5)] -translate-y-0.5"
                       : "border-border/70 bg-card/60 hover:-translate-y-0.5 hover:border-accent/50 hover:bg-card"

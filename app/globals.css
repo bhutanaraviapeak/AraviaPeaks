@@ -127,6 +127,12 @@
   html {
     scroll-behavior: smooth;
   }
+  /* Tailwind v4 preflight leaves buttons with the browser-default arrow cursor;
+     restore the pointer so every button reads as clickable. */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "ss01", "cv01", "kern";
