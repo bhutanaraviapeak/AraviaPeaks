@@ -185,7 +185,7 @@ export default function FestivalsPage() {
         <section className="relative overflow-hidden pb-16 pt-28 md:pb-24 md:pt-36">
           <div className="absolute inset-0">
             <Image
-              src="/bhutan-paro-taktsang-monastery-tiger-nest-mountain.jpg"
+              src="/images/packages/cultural-heritage.jpg"
               alt="Bhutan festivals"
               fill
               priority

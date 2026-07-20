@@ -17,7 +17,7 @@ export function AboutAravia() {
           <div className="relative">
             <div className="relative aspect-[4/5] overflow-hidden rounded-3xl">
               <Image
-                src="/bhutan-traditional-colorful-dzong-architecture.jpg"
+                src="/bhutan-traditional-colorful-dzong-fortress-archite.jpg"
                 alt="A Bhutanese dzong set against the Himalayas"
                 fill
                 className="object-cover"

@@ -123,7 +123,7 @@ export default function TravelGuidePage() {
         <section className="relative overflow-hidden pb-16 pt-28 md:pb-24 md:pt-36">
           <div className="absolute inset-0">
             <Image
-              src="/bhutan-himalayan-mountains-prayer-flags-temple-scenic.jpg"
+              src="/bhutan-dochula-pass-108-chortens-himalayan-mountain.jpg"
               alt="Bhutan travel guide"
               fill
               priority

@@ -16,7 +16,7 @@ export default function FarmhousesHomestaysPage() {
     {
       name: "Paro Valley View Homestay",
       location: "Paro",
-      image: "/bhutan-traditional-farmhouse-paro-valley.jpg",
+      image: "/images/folk-heritage-farmhouse.jpg",
       description:
         "Experience authentic Bhutanese hospitality in a traditional farmhouse nestled in the heart of Dzongdrakha village. Enjoy organic farm-to-table meals, participate in daily farming activities, and unwind with a traditional hot stone bath while taking in breathtaking valley views.",
       highlights: ["Organic farming", "Traditional hot stone bath", "Valley views", "Home-cooked meals"],
@@ -24,7 +24,7 @@ export default function FarmhousesHomestaysPage() {
     {
       name: "Punakha Heritage Homestay",
       location: "Punakha",
-      image: "/bhutan-punakha-farmhouse-dzong-view.jpg",
+      image: "/bhutan-punakha-dzong-fortress-rivers-mountains.jpg",
       description:
         "Nestled in the hills overlooking the majestic Punakha Dzong, this serene homestay offers a blend of tradition and comfort. Stay in charming villas, experience authentic Bhutanese farming life, and enjoy fresh produce from the family's paddy fields and orchard.",
       highlights: ["Dzong views", "Fresh produce", "Traditional villas", "Cultural immersion"],
@@ -32,7 +32,7 @@ export default function FarmhousesHomestaysPage() {
     {
       name: "Thimphu Valley Farmhouse",
       location: "Thimphu",
-      image: "/bhutan-thimphu-traditional-farmhouse-mountains.jpg",
+      image: "/haa-valley-summer-festival-yak-nomadic-herders.jpg",
       description:
         "A 400-year-old ancestral home carefully preserved over generations, featuring a sacred altar, warm guest spaces, and a living museum of treasured artifacts. Experience traditional hot stone baths and archery sessions with your hosts.",
       highlights: ["400-year-old heritage", "Archery sessions", "Sacred altar", "Living museum"],
@@ -40,7 +40,7 @@ export default function FarmhousesHomestaysPage() {
     {
       name: "Bumthang Countryside Retreat",
       location: "Bumthang",
-      image: "/bhutan-bumthang-farmhouse-countryside.jpg",
+      image: "/images/packages/custom-journey.jpg",
       description:
         "Immerse yourself in the tranquil countryside of Bumthang, staying in a traditional farmhouse surrounded by apple orchards and buckwheat fields. Participate in cheese-making, butter tea preparation, and traditional weaving demonstrations.",
       highlights: ["Apple orchards", "Cheese-making", "Weaving demos", "Peaceful setting"],
@@ -48,7 +48,7 @@ export default function FarmhousesHomestaysPage() {
     {
       name: "Haa Valley Traditional Home",
       location: "Haa Valley",
-      image: "/bhutan-haa-valley-traditional-stone-house.jpg",
+      image: "/haa-valley-summer-festival-yak-nomadic-herders.jpg",
       description:
         "Experience the unspoiled beauty of Haa Valley in a century-old stone farmhouse. This remote homestay offers spectacular mountain views, traditional yak herding experiences, and authentic Haap cuisine prepared with locally sourced ingredients.",
       highlights: ["Mountain views", "Yak herding", "Stone architecture", "Remote location"],

@@ -7,37 +7,37 @@ const experiences = [
   {
     title: "Culture & Heritage",
     description: "Sacred monasteries, dzongs, and living traditions.",
-    image: "/bhutan-traditional-colorful-dzong-architecture.jpg",
+    image: "/bhutan-traditional-colorful-dzong-fortress-archite.jpg",
     href: "/packages/cultural",
   },
   {
     title: "Trekking & Adventure",
     description: "Himalayan trails, alpine lakes, and remote valleys.",
-    image: "/druk-path-trek-alpine-lakes-mountains-bhutan.jpg",
+    image: "/images/packages/druk-path-trek.jpg",
     href: "/packages/trekking",
   },
   {
     title: "Luxury & Wellness",
     description: "Sanctuary stays, hot-stone baths, and mindful escapes.",
-    image: "/luxury-resort-bhutan-mountains-spa-five-star-hotel.jpg",
+    image: "/images/packages/luxury-bhutan.jpg",
     href: "/packages/luxury",
   },
   {
     title: "Festivals & Events",
     description: "Vibrant tshechus, mask dances, and sacred rituals.",
-    image: "/bhutan-festival-masked-dancers-colorful-costumes-c.jpg",
+    image: "/images/tshechu.webp",
     href: "/festivals",
   },
   {
     title: "Nature & Wildlife",
     description: "Pristine forests, cranes, and Bhutan's wild heart.",
-    image: "/bhutan-himalayan-birds-black-necked-crane-colorful.jpg",
+    image: "/images/packages/birdwatching.jpg",
     href: "/travel-guide",
   },
   {
     title: "Community Homestays",
     description: "Authentic village stays hosted by local families.",
-    image: "/bhutan-bumthang-farmhouse-countryside.jpg",
+    image: "/haa-valley-summer-festival-yak-nomadic-herders.jpg",
     href: "/bhutan/farmhouses-homestays",
   },
 ]
