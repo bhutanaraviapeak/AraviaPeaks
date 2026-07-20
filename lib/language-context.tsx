@@ -159,6 +159,7 @@ const translations: Record<string, string> = {
     festivals_explanation:
       "Tshechus are annual religious Bhutanese festivals held in each district on the tenth day of a month of the lunar Tibetan calendar. They honor Guru Rinpoche, the saint who brought Buddhism to Bhutan in the 8th century.",
     festivals_view_package: "View Festival Package",
+    festivals_plan_around: "Plan a Trip Around This Festival",
     festivals_cta_title: "Want to Experience a Festival?",
     festivals_cta_description:
       "Contact us to plan your festival tour. We'll handle all arrangements including festival tickets, best viewing spots, and cultural insights.",
@@ -185,7 +186,7 @@ const translations: Record<string, string> = {
     guide_visa_description:
       "All visitors except Indian nationals require a visa. Visas are arranged through a licensed tour operator as part of your travel planning.",
     guide_visa_processing: "Processing Time:",
-    guide_visa_time: "7-10 business days",
+    guide_visa_time: "5-7 working days",
     guide_visa_guarantee: "100% Visa Issuance Guaranteed",
     guide_visa_guarantee_desc:
       "We handle your Bhutan visa from start to finish — approval is guaranteed for every traveler booking with us.",
@@ -204,7 +205,7 @@ const translations: Record<string, string> = {
       "Complete full payment for your Bhutan journey with us, and we transfer your Sustainable Development Fee (SDF) to the government on your behalf.",
     guide_visa_step_2_title: "We Apply for Your e-Visa",
     guide_visa_step_2_desc:
-      "With your SDF payment receipt in hand, we submit your e-visa application — processing takes just 3 working days.",
+      "With your SDF payment receipt in hand, we submit your e-visa application — processing typically takes around 5 working days.",
     guide_visa_step_3_title: "Receive Your e-Visa",
     guide_visa_step_3_desc:
       "Once approved — guaranteed for every traveler with us — we email your e-visa directly to you.",
@@ -402,7 +403,7 @@ const translations: Record<string, string> = {
     faq_description: "Find answers to common questions about traveling to Bhutan",
     faq_question_1: "Do I need a visa to visit Bhutan?",
     faq_answer_1:
-      "Yes, all visitors except Indian, Bangladeshi, and Maldivian nationals require a visa. We can assist with the visa application process as part of your tour package.",
+      "Yes, all international visitors require a visa, except Indian nationals, who need a permit instead. We handle the entire visa application process as part of your tour package.",
     faq_question_2: "What is the best time to visit Bhutan?",
     faq_answer_2:
       "The best times are spring (March-May) and autumn (September-November) when the weather is pleasant and skies are clear. However, Bhutan is beautiful year-round.",

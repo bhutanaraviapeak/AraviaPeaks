@@ -126,7 +126,7 @@ const festivals = [
     highlights: ["Crane spotting", "Environmental awareness", "Folk dances"],
     duration: "1 day",
     image: "/images/packages/birdwatching.jpg",
-    packageLink: "/packages",
+    packageLink: "/inquiry",
   },
   {
     id: "wangdue-tshechu",
@@ -138,7 +138,7 @@ const festivals = [
     highlights: ["Ox Dance", "Regional traditions", "Mountain views"],
     duration: "3 days",
     image: "/wangdue-phodrang-tshechu-festival-ox-dance-bhutan.jpg",
-    packageLink: "/packages",
+    packageLink: "/inquiry",
   },
   {
     id: "haa-summer",
@@ -150,7 +150,7 @@ const festivals = [
     highlights: ["Yak culture", "Traditional sports", "Alpine setting"],
     duration: "2 days",
     image: "/haa-valley-summer-festival-yak-nomadic-herders.jpg",
-    packageLink: "/packages",
+    packageLink: "/inquiry",
   },
   {
     id: "royal-highlander",
@@ -162,7 +162,7 @@ const festivals = [
     highlights: ["Highland culture", "Yak competitions", "Remote location"],
     duration: "2 days",
     image: "/royal-highlander-festival-laya-highland-culture.jpg",
-    packageLink: "/packages",
+    packageLink: "/inquiry",
   },
 ]
 
@@ -291,7 +291,9 @@ export default function FestivalsPage() {
                       href={festival.packageLink}
                       className="btn-premium mt-6 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold tracking-wide"
                     >
-                      {t("festivals_view_package")}
+                      {festival.packageLink === "/inquiry"
+                        ? t("festivals_plan_around")
+                        : t("festivals_view_package")}
                     </Link>
                   </div>
                 </div>

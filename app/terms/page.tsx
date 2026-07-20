@@ -137,7 +137,7 @@ export default function TermsPage() {
             <Section title="5. Travel Requirements: Visas, Insurance & Health">
               <p>
                 <strong className="text-foreground">Visas:</strong> A visa is required for all visitors except
-                Indian, Bangladeshi, and Maldivian nationals, who require a valid permit instead. We assist with
+                Indian nationals, who require a valid permit instead. We assist with
                 your Bhutan visa application as part of your booking; however, you are responsible for any transit
                 or entry visas required for other countries on your itinerary. We cannot issue a refund if travel is
                 prevented due to incomplete or incorrect personal travel documentation.

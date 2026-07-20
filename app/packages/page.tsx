@@ -44,7 +44,11 @@ export default async function PackagesPage({
   const durationFilter = getStringValue(params.duration)
   const regionFilter = getStringValue(params.region)
 
-  const regions = Array.from(new Set(packages.map((pkg) => pkg.region))).sort()
+  // "All Regions" is the Custom Journey package's literal region value — skip it
+  // here so it doesn't duplicate the dropdown's own "All Regions" default option.
+  const regions = Array.from(new Set(packages.map((pkg) => pkg.region)))
+    .filter((region) => region !== "All Regions")
+    .sort()
 
   const filteredPackages = packages.filter((pkg) => {
     const categoryMatch =

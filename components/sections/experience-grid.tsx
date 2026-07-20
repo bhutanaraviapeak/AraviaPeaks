@@ -8,19 +8,19 @@ const experiences = [
     title: "Culture & Heritage",
     description: "Sacred monasteries, dzongs, and living traditions.",
     image: "/bhutan-traditional-colorful-dzong-architecture.jpg",
-    href: "/packages",
+    href: "/packages/cultural",
   },
   {
     title: "Trekking & Adventure",
     description: "Himalayan trails, alpine lakes, and remote valleys.",
     image: "/druk-path-trek-alpine-lakes-mountains-bhutan.jpg",
-    href: "/packages",
+    href: "/packages/trekking",
   },
   {
     title: "Luxury & Wellness",
     description: "Sanctuary stays, hot-stone baths, and mindful escapes.",
     image: "/luxury-resort-bhutan-mountains-spa-five-star-hotel.jpg",
-    href: "/packages",
+    href: "/packages/luxury",
   },
   {
     title: "Festivals & Events",
