@@ -146,8 +146,10 @@ export function PackageDetails({ pkg }: { pkg: TourPackage }) {
       <section className="relative">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-muted/30" />
         <div className="relative container mx-auto max-w-6xl px-4 md:px-6 py-12">
-          <div className="grid gap-10 md:grid-cols-[1fr_360px]">
-            <div className="space-y-8">
+          {/* minmax(0,1fr) — bare 1fr/auto tracks size to their content's min-width and
+              blow the page out horizontally when a card holds wide content. */}
+          <div className="grid grid-cols-[minmax(0,1fr)] gap-10 md:grid-cols-[minmax(0,1fr)_360px]">
+            <div className="min-w-0 space-y-8">
               <Card className="card-premium border border-border/60 bg-card/90">
                 <CardContent className="p-6 md:p-8 space-y-4">
                   <div className="flex flex-wrap items-center justify-between gap-4">

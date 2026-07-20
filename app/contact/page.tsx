@@ -7,6 +7,7 @@ import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
+import Image from "next/image"
 import { useLanguage } from "@/lib/language-context"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -131,14 +132,28 @@ export default function ContactPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       <main className="flex-1">
-        <section className="relative overflow-hidden py-20 md:py-28">
-          <div className="container relative px-4 md:px-6">
+        <section className="relative overflow-hidden pb-16 pt-28 md:pb-24 md:pt-36">
+          <div className="absolute inset-0">
+            <Image
+              src="/bhutan-punakha-dzong-fortress-rivers-mountains.jpg"
+              alt="Punakha Dzong beside the river, Bhutan"
+              fill
+              priority
+              className="scale-105 object-cover"
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-background" />
+            <div className="absolute inset-0 hero-gradient" />
+          </div>
+          <div className="container relative z-10 px-4 md:px-6">
             <div className="mx-auto max-w-2xl text-center">
-              <span className="eyebrow justify-center">{t("contact_get_in_touch")}</span>
-              <h1 className="mt-5 font-serif text-4xl font-semibold leading-tight tracking-tight text-balance sm:text-5xl md:text-6xl">
+              <span className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/90 backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent" /> {t("contact_get_in_touch")}
+              </span>
+              <h1 className="font-serif text-4xl font-semibold leading-tight tracking-tight text-balance text-white sm:text-5xl md:text-6xl">
                 {t("contact_title")}
               </h1>
-              <p className="mt-5 text-lg leading-relaxed text-muted-foreground text-balance">
+              <p className="mt-5 text-lg leading-relaxed text-balance text-white/85">
                 {t("contact_description")}
               </p>
             </div>
