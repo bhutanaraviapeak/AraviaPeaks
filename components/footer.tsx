@@ -112,11 +112,12 @@ export function Footer() {
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-3">
+            {/* Business-level identifiers only — never owner names or CID numbers here. */}
             <span className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-xs text-white/70">
-              Licensed Bhutan Tour Operator
+              Licensed Bhutan Tour Operator &middot; License No. 06013153
             </span>
             <span className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-xs text-white/70">
-              Local Experts
+              DoT Clearance DOT/2025/918
             </span>
             <span className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-xs text-white/70">
               Sustainable Travel

@@ -57,9 +57,10 @@ export default function TermsPage() {
 
             <Section title="1. Introduction & Definitions">
               <p>
-                Bhutan Aravia Peaks is a locally owned and licensed Bhutanese tour operator. We arrange travel and
-                tourism services by coordinating with hotels, guides, drivers, airlines, and other third-party
-                suppliers (&ldquo;Providers&rdquo;) on your behalf.
+                Bhutan Aravia Peaks is a locally owned and licensed Bhutanese tour operator (Business License
+                No. 06013153, Department of Industry, MoICE; Department of Tourism Clearance No. DOT/2025/918).
+                We arrange travel and tourism services by coordinating with hotels, guides, drivers, airlines,
+                and other third-party suppliers (&ldquo;Providers&rdquo;) on your behalf.
               </p>
               <p>
                 <strong className="text-foreground">Relationship:</strong> We manage the planning, coordination,
