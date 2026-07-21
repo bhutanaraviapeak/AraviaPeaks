@@ -122,6 +122,7 @@ const translations: Record<string, string> = {
     contact_us_subtitle: "Have questions about your Bhutan journey? We're here to help you plan the perfect adventure.",
     get_in_touch: "Get in Touch",
     message_sent_success: "Message sent successfully! We'll get back to you within 24 hours.",
+    inquiry_success_description: "A Bhutan specialist will review your message and reach out shortly.",
     your_message: "Your Message",
     message_placeholder: "Tell us about your travel plans, questions, or any special requests...",
     sending: "Sending",
